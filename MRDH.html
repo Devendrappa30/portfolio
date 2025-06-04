@@ -223,6 +223,15 @@
         max-width: 420px;
       }
     }
+    /* Reports mapping lists */
+    .report-list {
+      margin-top: 0;
+      margin-bottom: 0.5em;
+      padding-left: 1.5em;
+      color: #374151;
+      font-size: 1em;
+      line-height: 1.6;
+    }
   </style>
 </head>
 <body>
@@ -240,7 +249,6 @@
     <div class="section-container">
       <!-- Metrics Section -->
       <!-- ... (the metrics section from before, unchanged) ... -->
-      <!-- --- SKIPPING FOR BREVITY; USE PREVIOUS VERSION --- -->
 
       <!-- Reports Section -->
       <div id="reports" class="section" role="tabpanel">
@@ -260,30 +268,74 @@
           <!-- Waterfall Reports Sub-section -->
           <div id="reports-waterfall" class="subsection active" role="tabpanel">
             <h4>Waterfall</h4>
-            <p class="subsection-description">Reports for Waterfall projects, detailing phase progress, budget, and risks.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <p class="subsection-description">Key reports for Waterfall projects, focusing on linear progress and milestones.</p>
+            <ul class="report-list">
+              <li>Project Plan & Timeline Report</li>
+              <li>Requirements Traceability Matrix</li>
+              <li>Design Specification Report</li>
+              <li>Development Progress Report</li>
+              <li>Test Case Coverage Report</li>
+              <li>Defect Summary Report</li>
+              <li>Phase Gate Review Report</li>
+              <li>Deployment/Release Report</li>
+              <li>Change Control Report</li>
+              <li>Final Project Closure Report</li>
+            </ul>
           </div>
           <!-- Agile Reports Sub-section -->
           <div id="reports-agile" class="subsection" role="tabpanel">
-            <h4>Agile</h4>
-            <p class="subsection-description">Reports for Agile projects, summarizing sprint outcomes, impediments, and team performance.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <h4>Agile (Scrum)</h4>
+            <p class="subsection-description">Key reports for Agile (Scrum) projects, supporting adaptive and sprint-based delivery.</p>
+            <ul class="report-list">
+              <li>Sprint Burndown Chart</li>
+              <li>Product Backlog Report</li>
+              <li>Sprint Review Summary</li>
+              <li>Velocity Trend Report</li>
+              <li>Release Planning Report</li>
+              <li>Impediment Log</li>
+              <li>Daily Standup Summary</li>
+              <li>Retrospective Action Items</li>
+              <li>Defect/Bug Report</li>
+              <li>Story Completion Rate</li>
+            </ul>
           </div>
           <!-- Extreme Programming (XP) Reports Sub-section -->
           <div id="reports-xp" class="subsection" role="tabpanel">
             <h4>Extreme Programming (XP)</h4>
-            <p class="subsection-description">Reports for XP projects, analyzing iteration results and code quality metrics.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <p class="subsection-description">Key reports for XP projects, emphasizing rapid feedback and code quality.</p>
+            <ul class="report-list">
+              <li>Pair Programming Log</li>
+              <li>Automated Test Coverage Report</li>
+              <li>Continuous Integration Report</li>
+              <li>Refactoring Activity Log</li>
+              <li>Code Review Summary</li>
+              <li>Customer Feedback Report</li>
+              <li>Release Notes</li>
+              <li>Defect Prevention Report</li>
+              <li>Iteration Planning Report</li>
+              <li>Build Stability Report</li>
+            </ul>
           </div>
           <!-- IT Support Projects (Kanban) Reports Sub-section -->
           <div id="reports-kanban" class="subsection" role="tabpanel">
             <h4>IT Support Projects (Kanban)</h4>
-            <p class="subsection-description">Reports for Kanban-based IT support projects, covering ticket trends and service level agreements.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <p class="subsection-description">Key reports for Kanban-based IT support projects, focusing on workflow and SLA adherence.</p>
+            <ul class="report-list">
+              <li>Kanban Board Status</li>
+              <li>Throughput Report</li>
+              <li>Cycle Time Analysis</li>
+              <li>Blocked Tasks Report</li>
+              <li>WIP Limit Breach Report</li>
+              <li>Lead Time Distribution</li>
+              <li>Service Level Agreement (SLA) Report</li>
+              <li>Customer Satisfaction Report</li>
+              <li>Incident Root Cause Analysis</li>
+              <li>Backlog Aging Report</li>
+            </ul>
           </div>
         </div>
-        
-        <!-- --- Inserted Key Reports & Metrics Cards Below --- -->
+
+        <!-- Key Reports & Metrics Cards Section as additional reference -->
         <div style="margin-top:32px;">
           <h2 style="text-align:center;color:#293241;font-size:2em;margin-bottom:8px;margin-top:32px;font-family:'Roboto',Arial,sans-serif;">
             Project Methodologies: Key Reports & Metrics
@@ -442,8 +494,7 @@
             </div>
           </div>
         </div>
-        <!-- --- End Key Reports & Metrics Cards Section --- -->
-
+        <!-- End Key Reports & Metrics Cards Section -->
       </div>
       <!-- Dashboards Section -->
       <!-- ... (dashboards section from before, unchanged) ... -->

@@ -1,54 +1,17 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Metrics, Reports, and Dashboards Hub</title>
+  <!-- Add Tailwind CSS for better metric card style support -->
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
-      background-color: #E6F0FA; /* Light blue background */
+      background-color: #E6F0FA;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -57,25 +20,25 @@
     .container {
       width: 90%;
       max-width: 1200px;
-      background-color: #FFFFFF; /* White container */
+      background-color: #FFFFFF;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(30, 58, 138, 0.1); /* Blue-tinted shadow */
+      box-shadow: 0 4px 8px rgba(30, 58, 138, 0.1);
     }
     h1 {
       font-size: 2.5em;
-      color: #1E3A8A; /* Dark blue */
+      color: #1E3A8A;
       text-align: center;
       margin-bottom: 20px;
     }
     h3 {
       font-size: 1.3em;
-      color: #3B82F6; /* Medium blue */
+      color: #3B82F6;
       margin: 20px 0 10px;
     }
     h4 {
       font-size: 1.1em;
-      color: #3B82F6; /* Medium blue */
+      color: #3B82F6;
       margin: 15px 0 10px;
     }
     .section-toggle {
@@ -88,18 +51,18 @@
     .section-toggle button {
       padding: 12px 24px;
       font-size: 1em;
-      background-color: #2563EB; /* Blue */
-      color: #FFFFFF; /* White text */
+      background-color: #2563EB;
+      color: #FFFFFF;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
     .section-toggle button:hover:not(.active) {
-      background-color: #FBBF24; /* Yellow hover */
+      background-color: #FBBF24;
     }
     .section-toggle button.active {
-      background-color: #F59E0B; /* Darker yellow active */
+      background-color: #F59E0B;
     }
     .subsection-toggle {
       display: flex;
@@ -111,18 +74,18 @@
     .subsection-toggle button {
       padding: 10px 20px;
       font-size: 0.9em;
-      background-color: #60A5FA; /* Lighter blue */
-      color: #FFFFFF; /* White text */
+      background-color: #60A5FA;
+      color: #FFFFFF;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
     .subsection-toggle button:hover:not(.active) {
-      background-color: #FBBF24; /* Yellow hover */
+      background-color: #FBBF24;
     }
     .subsection-toggle button.active {
-      background-color: #F59E0B; /* Darker yellow active */
+      background-color: #F59E0B;
     }
     .section-container {
       display: flex;
@@ -134,10 +97,10 @@
       display: none;
       flex: 1 1 100%;
       min-width: 0;
-      border: 1px solid #FBBF24; /* Yellow border */
+      border: 1px solid #FBBF24;
       border-radius: 5px;
       padding: 15px;
-      background-color: #FFFFFF; /* White background */
+      background-color: #FFFFFF;
     }
     .section.active {
       display: block;
@@ -150,38 +113,38 @@
     }
     .section-description, .subsection-description {
       font-size: 1em;
-      color: #4B5563; /* Dark gray */
+      color: #4B5563;
       margin-bottom: 15px;
     }
     .no-documents {
       font-size: 1em;
-      color: #4B5563; /* Dark gray */
+      color: #4B5563;
       text-align: center;
       margin: 20px 0;
     }
     .dashboard-link {
       display: block;
       font-size: 1em;
-      color: #1D4ED8; /* Blue link */
+      color: #1D4ED8;
       text-decoration: none;
       margin: 10px 0;
       transition: color 0.3s ease;
     }
     .dashboard-link:hover {
-      color: #B45309; /* Darker yellow-orange hover */
+      color: #B45309;
     }
     .error-message {
       font-size: 1em;
-      color: #DC2626; /* Red for errors */
+      color: #DC2626;
       margin: 10px 0;
     }
     .copyright {
       font-size: 0.9em;
-      color: #1E3A8A; /* Dark blue */
+      color: #1E3A8A;
       text-align: center;
       margin-top: 30px;
       padding-top: 10px;
-      border-top: 1px solid #FBBF24; /* Yellow separator */
+      border-top: 1px solid #FBBF24;
     }
     @media (max-width: 768px) {
       .section-container {
@@ -222,29 +185,289 @@
           <div id="metrics-waterfall" class="subsection active" role="tabpanel">
             <h4>Waterfall</h4>
             <p class="subsection-description">Metrics for Waterfall projects, focusing on phase completion rates and milestone achievements.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Requirements Stability Index</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Measures how stable project requirements are, ensuring minimal changes.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Planned vs Actual Effort</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Compares estimated effort to actual effort spent on tasks.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Schedule Variance</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Tracks deviations from the planned schedule for timely delivery.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Cost Variance (EVM)</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Measures cost differences using Earned Value Management.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Phase Exit Criteria Compliance</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Ensures each project phase meets completion criteria.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Defect Density</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Counts defects per unit of code (e.g., per 1,000 lines).</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Test Coverage</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of code or requirements covered by tests.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Requirements Traceability Matrix</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Links requirements to deliverables to ensure coverage.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Risk Burndown</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Tracks the reduction of project risks over time.</p>
+              </div>
+            </div>
           </div>
 
           <!-- Agile Metrics Sub-section -->
           <div id="metrics-agile" class="subsection" role="tabpanel">
             <h4>Agile</h4>
             <p class="subsection-description">Metrics for Agile projects, including sprint velocity, story points completed, and cycle time.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Sprint Velocity</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Measures work (story points) completed per sprint.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Burndown/Burnup Charts</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Visualizes work completed vs. remaining in a sprint.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Story Completion Ratio</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of planned user stories completed in a sprint.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Team Capacity Utilization</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Measures how effectively team capacity is used.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Sprint Goal Success Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of sprints achieving their goals.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Defect Leakage Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of defects found after release.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Escaped Defects</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Number of defects that reach production.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Sprint Predictability</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Consistency of delivering planned work across sprints.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Retrospective Action Closure Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of retrospective actions completed.</p>
+              </div>
+            </div>
           </div>
 
           <!-- Extreme Programming (XP) Metrics Sub-section -->
           <div id="metrics-xp" class="subsection" role="tabpanel">
             <h4>Extreme Programming (XP)</h4>
             <p class="subsection-description">Metrics for XP projects, tracking pair programming efficiency and test coverage.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Pair Programming Adoption Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of coding tasks done in pairs.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Test Coverage (Unit Tests)</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of code covered by unit tests.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Defect Rate in Production</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Number of defects found in production.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Refactoring Frequency</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">How often code is refactored to improve quality.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Code Integration Frequency (CI/CD)</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">How often code is integrated into the main branch.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Customer Feedback Score</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Customer satisfaction with delivered features.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Sustainable Pace Indicator</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Measures if the team maintains a consistent work pace.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Number of Automated Tests</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Total number of automated tests in the codebase.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Time to Fix Broken Builds</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Time taken to resolve failed builds in CI/CD.</p>
+              </div>
+            </div>
           </div>
 
           <!-- IT Support Projects (Kanban) Metrics Sub-section -->
           <div id="metrics-kanban" class="subsection" role="tabpanel">
             <h4>IT Support Projects (Kanban)</h4>
             <p class="subsection-description">Metrics for Kanban-based IT support projects, measuring ticket resolution rates and throughput.</p>
-            <p class="no-documents">No documents available in this section.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Cycle Time</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Time for a task to move from start to completion.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Lead Time</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Time from task creation to completion.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Throughput</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Number of tasks completed in a given period.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">WIP (Work In Progress)</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Number of tasks currently in progress.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">SLA Adherence</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of tasks meeting service level agreements.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">MTTR (Mean Time to Resolve)</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Average time to resolve incidents.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">First Call Resolution Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of issues resolved on the first contact.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Incident Volume Trend</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Tracks the number of incidents over time.</p>
+              </div>
+              <div class="metric-card bg-white p-6 rounded-lg shadow-md">
+                <div class="flex items-center mb-2">
+                  <h3 class="text-lg font-semibold text-blue-900">Change Failure Rate</h3>
+                  <span class="text-green-600 text-xl ml-2">✔</span>
+                </div>
+                <p class="text-blue-800">Percentage of changes that fail in production.</p>
+              </div>
+            </div>
           </div>
+        </div>
+        <div class="notes mt-8 text-center">
+          <p><strong>Legend:</strong></p>
+          <p><span class="text-green-600">✔</span> = Critical metric, commonly used in the methodology</p>
         </div>
       </div>
 
@@ -252,7 +475,6 @@
       <div id="reports" class="section" role="tabpanel">
         <h3>Reports</h3>
         <p class="section-description">Detailed analytical reports summarizing project performance, trends, and insights.</p>
-
         <!-- Subsection Toggle Buttons -->
         <div class="subsection-toggle" role="tablist">
           <button class="subsection-btn active" onclick="showSubsection('reports-waterfall')" role="tab" aria-label="Switch to Waterfall Reports subsection">Waterfall</button>
@@ -260,7 +482,6 @@
           <button class="subsection-btn" onclick="showSubsection('reports-xp')" role="tab" aria-label="Switch to Extreme Programming (XP) Reports subsection">Extreme Programming (XP)</button>
           <button class="subsection-btn" onclick="showSubsection('reports-kanban')" role="tab" aria-label="Switch to IT Support Projects (Kanban) Reports subsection">IT Support Projects (Kanban)</button>
         </div>
-
         <!-- Subsection Container -->
         <div class="subsection-container">
           <!-- Waterfall Reports Sub-section -->
@@ -269,21 +490,18 @@
             <p class="subsection-description">Reports for Waterfall projects, detailing phase progress, budget, and risks.</p>
             <p class="no-documents">No documents available in this section.</p>
           </div>
-
           <!-- Agile Reports Sub-section -->
           <div id="reports-agile" class="subsection" role="tabpanel">
             <h4>Agile</h4>
             <p class="subsection-description">Reports for Agile projects, summarizing sprint outcomes, impediments, and team performance.</p>
             <p class="no-documents">No documents available in this section.</p>
           </div>
-
           <!-- Extreme Programming (XP) Reports Sub-section -->
           <div id="reports-xp" class="subsection" role="tabpanel">
             <h4>Extreme Programming (XP)</h4>
             <p class="subsection-description">Reports for XP projects, analyzing iteration results and code quality metrics.</p>
             <p class="no-documents">No documents available in this section.</p>
           </div>
-
           <!-- IT Support Projects (Kanban) Reports Sub-section -->
           <div id="reports-kanban" class="subsection" role="tabpanel">
             <h4>IT Support Projects (Kanban)</h4>
@@ -297,7 +515,6 @@
       <div id="dashboards" class="section" role="tabpanel">
         <h3>Dashboards</h3>
         <p class="section-description">Interactive visualizations and real-time data displays for monitoring project status.</p>
-
         <!-- Subsection Toggle Buttons -->
         <div class="subsection-toggle" role="tablist">
           <button class="subsection-btn active" onclick="showSubsection('dashboards-waterfall')" role="tab" aria-label="Switch to Waterfall Dashboards subsection">Waterfall</button>
@@ -305,7 +522,6 @@
           <button class="subsection-btn" onclick="showSubsection('dashboards-xp')" role="tab" aria-label="Switch to Extreme Programming (XP) Dashboards subsection">Extreme Programming (XP)</button>
           <button class="subsection-btn" onclick="showSubsection('dashboards-kanban')" role="tab" aria-label="Switch to IT Support Projects (Kanban) Dashboards subsection">IT Support Projects (Kanban)</button>
         </div>
-
         <!-- Subsection Container -->
         <div class="subsection-container">
           <!-- Waterfall Dashboards Sub-section -->
@@ -313,30 +529,27 @@
             <h4>Waterfall</h4>
             <p class="subsection-description">Dashboards for projects managed using the Waterfall methodology, focusing on sequential progress tracking.</p>
             <a href="Waterfall Project Dashboard.html" class="dashboard-link" target="_blank" onclick="logLinkClick('Waterfall Dashboard')">View Waterfall Dashboard</a>
-            <p class="error-message" id="waterfall-error" style="display: none;">Error: Waterfall Dashboard file not found. Please check the file path.</p>
+            <p class="error-message" id="waterfall-dashboard-error" style="display: none;">Error: Waterfall Dashboard file not found. Please check the file path.</p>
           </div>
-
           <!-- Agile Dashboards Sub-section -->
           <div id="dashboards-agile" class="subsection" role="tabpanel">
             <h4>Agile</h4>
             <p class="subsection-description">Dashboards for Agile projects, emphasizing sprint progress, velocity, and backlog management.</p>
             <a href="Agile_Dashboard.html" class="dashboard-link" target="_blank" onclick="logLinkClick('Agile Dashboard')">View Agile Dashboard</a>
-            <p class="error-message" id="agile-error" style="display: none;">Error: Agile Dashboard file not found. Please check the file path.</p>
+            <p class="error-message" id="agile-dashboard-error" style="display: none;">Error: Agile Dashboard file not found. Please check the file path.</p>
           </div>
-
           <!-- Extreme Programming (XP) Dashboards Sub-section -->
           <div id="dashboards-xp" class="subsection" role="tabpanel">
             <h4>Extreme Programming (XP)</h4>
             <p class="subsection-description">Dashboards for XP projects, highlighting pair programming, test-driven development, and rapid iterations.</p>
             <p class="no-documents">No documents available in this section.</p>
           </div>
-
           <!-- IT Support Projects (Kanban) Dashboards Sub-section -->
           <div id="dashboards-kanban" class="subsection" role="tabpanel">
             <h4>IT Support Projects (Kanban)</h4>
             <p class="subsection-description">Dashboards for Kanban-based IT support projects, focusing on workflow visualization and ticket resolution metrics.</p>
             <a href="it_support_dashboard.html" class="dashboard-link" target="_blank" onclick="logLinkClick('IT Support Projects Dashboard')">View IT Support Projects Dashboard</a>
-            <p class="error-message" id="kanban-error" style="display: none;">Error: IT Support Projects Dashboard file not found. Please check the file path.</p>
+            <p class="error-message" id="it-support-projects-dashboard-error" style="display: none;">Error: IT Support Projects Dashboard file not found. Please check the file path.</p>
           </div>
         </div>
       </div>
@@ -407,12 +620,12 @@
         .then(response => {
           if (!response.ok) {
             console.error(`Failed to load ${dashboardName}: File not found or inaccessible.`);
-            document.getElementById(`${dashboardName.toLowerCase().replace(/ /g, '-')}-error`).style.display = 'block';
+            document.getElementById(`${dashboardName.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '')}-error`).style.display = 'block';
           }
         })
         .catch(error => {
           console.error(`Error checking ${dashboardName}:`, error);
-          document.getElementById(`${dashboardName.toLowerCase().replace(/ /g, '-')}-error`).style.display = 'block';
+          document.getElementById(`${dashboardName.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9\-]/g, '')}-error`).style.display = 'block';
         });
     }
 

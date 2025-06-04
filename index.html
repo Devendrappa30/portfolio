@@ -15,42 +15,6 @@
         .case-study-content.active {
             display: block;
         }
-        /* Resources Dropdown Custom Styles */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: white;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 30;
-            margin-top: 0.5rem;
-            border-radius: 0.375rem;
-        }
-        .dropdown-content a {
-            color: #1e3a8a;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            display: block;
-            border-radius: 0.375rem;
-        }
-        .dropdown-content a:hover {
-            background-color: #dbeafe;
-        }
-        .dropdown:hover .dropdown-content,
-        .dropdown:focus-within .dropdown-content {
-            display: block;
-        }
-        .dropdown-btn:after {
-            content: '';
-            border: solid #fff;
-            border-width: 0 2px 2px 0;
-            display: inline-block;
-            padding: 3px;
-            margin-left: 6px;
-            transform: rotate(45deg);
-            -webkit-transform: rotate(45deg);
-            vertical-align: middle;
-        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans smooth-scroll">
@@ -66,33 +30,10 @@
                     <a href="#skills" class="hover:bg-blue-700 px-3 py-2 rounded-md">Skills</a>
                     <a href="#case-studies" class="hover:bg-blue-700 px-3 py-2 rounded-md">Case Studies</a>
                     <a href="#certifications" class="hover:bg-blue-700 px-3 py-2 rounded-md">Certifications</a>
-                    <!-- Resources Dropdown -->
-                    <div class="dropdown relative">
-                        <button class="dropdown-btn hover:bg-blue-700 px-3 py-2 rounded-md focus:outline-none flex items-center">
-                            Resources
-                        </button>
-                        <div class="dropdown-content absolute right-0 mt-2 shadow-lg">
-                            <!-- Dashboards Dropdown -->
-                            <div class="dropdown relative">
-                                <a href="dashboards.html" class="flex items-center justify-between">
-                                    Dashboards
-                                    <span class="ml-1">&#9654;</span>
-                                </a>
-                                <div class="dropdown-content absolute left-full top-0 mt-0 shadow-lg">
-                                    <a href="Waterfall Project Dashboard.html">Waterfall</a>
-                                    <a href="Agile_Dashboard.html">Agile</a>
-                                    <a href="it_support_dashboard.html">IT Support (Kanban)</a>
-                                </div>
-                            </div>
-                            <a href="project-methodologies-key-reports.html">Reports</a>
-                            <a href="MRDH.html">Metrics</a>
-                            <a href="Review PPT.html">Presentations (PPTs)</a>
-                            <hr>
-                            <span class="block px-4 py-2 font-semibold text-blue-900">Documents</span>
-                            <a href="Support SLA.html">Support SLA</a>
-                            <a href="SM&APM Portfolio HTML Presentation.html">SM&APM Portfolio HTML Presentation</a>
-                        </div>
-                    </div>
+                    <!-- Removed Resources Dropdown -->
+                    <!-- New Navigation Buttons -->
+                    <a href="metrics-dashboards.html" target="_blank" class="hover:bg-blue-700 px-3 py-2 rounded-md">Metrics and Dashboards</a>
+                    <a href="project-resources.html" target="_blank" class="hover:bg-blue-700 px-3 py-2 rounded-md">Project Resources</a>
                     <a href="#contact" class="hover:bg-blue-700 px-3 py-2 rounded-md">Contact</a>
                 </div>
             </div>
@@ -117,10 +58,10 @@
             <div class="flex flex-col md:flex-row items-center">
                 <div class="md:w-1/2">
                     <p class="text-lg text-gray-700 mb-4">
-                        I am a Certified Scrum Master (CSM) with 10 years of experience in Agile project management. My expertise lies in facilitating Agile ceremonies (daily stand-ups, sprint planning, reviews, retrospectives), coaching teams to embrace Agile values, and removing impediments to ensure high-performing Scrum teams.
+                        I am a Certified Scrum Master (CSM) with 10 years of experience in Agile project management. My expertise lies in facilitating Agile ceremonies (daily stand-ups, sprint plannin[...]
                     </p>
                     <p class="text-lg text-gray-700">
-                        My goal is to maximize productivity, foster continuous improvement, and deliver high-quality software. I specialize in Scrum, Kanban, XP, LeSS, and SAFe frameworks, with strong skills in conflict resolution, communication, and stakeholder management.
+                        My goal is to maximize productivity, foster continuous improvement, and deliver high-quality software. I specialize in Scrum, Kanban, XP, LeSS, and SAFe frameworks, with strong[...]
                     </p>
                 </div>
                 <div class="md:w-1/2 mt-6 md:mt-0 md:pl-8">
@@ -210,8 +151,8 @@
                         <!-- Replace with image2.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Narayana Health (Healthcare, 250 agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual lead handling, inefficient support, data migration gaps, lack of self-service.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Sell/Support, automated ticket routing, self-service portal, integrated HMS/EMR/Telephony, 25+ customizations.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> 30% increase in lead conversions, 40% faster response times, 25% improved resolution speed, 35% better SLA compliance, 40% reduction in manual work.</p>
+                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Sell/Support, automated ticket routing, self-service portal, integrated HMS/EMR/Telephony, 25+ cus[...]
+                        <p class="text-gray-700 mb-2"><strong>Results:</strong> 30% increase in lead conversions, 40% faster response times, 25% improved resolution speed, 35% better SLA compliance, 4[...]
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell/Support, HMS, EMR, Telephony, Agile methodology.</p>
                     </div>
                 </div>
@@ -225,7 +166,7 @@
                         <!-- Replace with image3.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Glassco Laboratory Equipment (1000+ employees, 25 sales agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual sales tracking, limited lead management, expense calculation issues, lack of integrations.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Sell, integrated Google Maps/SAP/LinkedIn, multi-channel communication (WhatsApp, Facebook), automated expense tracking.</p>
+                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Sell, integrated Google Maps/SAP/LinkedIn, multi-channel communication (WhatsApp, Facebook), automa[...]
                         <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved sales tracking, higher lead conversions, automated expense management, seamless integrations.</p>
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell, Google Maps API, SAP, LinkedIn, WhatsApp, Agile methodology.</p>
                     </div>
@@ -240,8 +181,8 @@
                         <!-- Replace with image4.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Everise (Customer Experience, 460,000+ employees)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Difficult ticket logging, inefficient ITSM, limited reporting, lack of integration.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Suite, integrated MyndBend/OpsGenie, multi-channel support, HRMS/AD integration, automated SLA tracking.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 20% cost reduction, 19% resolution efficiency increase.</p>
+                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Suite, integrated MyndBend/OpsGenie, multi-channel support, HRMS/AD integration, automated SLA tra[...]
+                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 20% cost reduction, 19% resolution efficiency increase.</p[...]
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Device42, Agile methodology.</p>
                     </div>
                 </div>
@@ -256,7 +197,7 @@
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> QualityKiosk (IT Services)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Inefficient ITSM workflows, lack of unified system, limited self-service, no integration.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Suite, automated ITSM workflows, integrated HRMS/AD, multi-channel support, custom dashboards.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 19% resolution efficiency increase, 20% cost reduction.</p>
+                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 19% resolution efficiency increase, 20% cost reduction.</p[...]
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Jira, Salesforce, SAP, Agile methodology.</p>
                     </div>
                 </div>
@@ -270,7 +211,7 @@
                         <!-- Replace with image6.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> The Art of Living (Non-Profit, Wellness)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Disconnected sales/marketing, inefficient lead management, limited reporting, manual data handling.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Salesforce Sales & Marketing Cloud, automated workflows, data migration, custom dashboards, mobile access.</p>
+                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Salesforce Sales & Marketing Cloud, automated workflows, data migration, custom dashboards, mobile access.[...]
                         <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved lead conversions, automated processes, enhanced data visibility, personalized engagement.</p>
                         <p class="text-gray-700"><strong>Technologies:</strong> Salesforce Sales/Marketing Cloud, Agile methodology.</p>
                     </div>

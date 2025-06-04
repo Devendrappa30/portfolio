@@ -54,6 +54,7 @@
     </style>
 </head>
 <body class="bg-gray-100 font-sans smooth-scroll">
+
     <!-- Navigation -->
     <nav class="bg-blue-900 text-white sticky top-0 z-10 shadow-md">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -104,7 +105,9 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-4xl font-bold mb-4">Certified Scrum Master & Agile Practitioner</h2>
             <p class="text-xl mb-6">"Helping teams deliver high-quality software through Agile & Scrum practices"</p>
-            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-md font-semibold hover:bg-yellow-500">
+            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620"
+               target="_blank"
+               class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-md font-semibold hover:bg-yellow-500">
                 Hire Me on Upwork
             </a>
         </div>
@@ -114,7 +117,7 @@
     <section id="about" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-6">About Me</h2>
-            <div class="flex flex-col md:flex-row items-center">
+            <div class="flex flex-col md:flex-row items-center md:space-x-8">
                 <div class="md:w-1/2">
                     <p class="text-lg text-gray-700 mb-4">
                         I am a Certified Scrum Master (CSM) with 10 years of experience in Agile project management.
@@ -125,8 +128,12 @@
                         I specialize in Scrum, Kanban, XP, LeSS, and SAFe frameworks, with strong communication and stakeholder management skills.
                     </p>
                 </div>
-                <div class="md:w-1/2 mt-6 md:mt-0 md:pl-8">
-                    <img src="images/image1.png" alt="Agile Team" class="rounded-lg shadow-md">
+                <div class="md:w-1/2 mt-6 md:mt-0 md:pl-8 flex justify-center">
+                    <img
+                        src="images/image1.png"
+                        alt="Agile Team in a meeting"
+                        class="rounded-lg shadow-md w-full max-w-xs md:max-w-md mx-auto"
+                    >
                     <!-- Replace with image1.png from SM&APM Portfolio.pptx -->
                 </div>
             </div>
@@ -202,13 +209,21 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-gray-900 mb-6">Case Studies</h2>
             <div class="space-y-6">
+
                 <!-- Narayana Health -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('narayana')">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer"
+                        onclick="toggleCaseStudy('narayana')">
                         Narayana Health - Zendesk Sell & Support Implementation
                     </h3>
                     <div id="narayana" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Healthcare Project" class="rounded-lg mb-4">
+                        <div class="flex justify-center mb-4">
+                            <img
+                                src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Healthcare Project"
+                                class="rounded-lg shadow-md w-full max-w-md mx-auto"
+                            >
+                        </div>
                         <!-- Replace with image2.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Narayana Health (Healthcare, 250 agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual lead handling, inefficient support, data migration gaps, lack of self-service.</p>
@@ -217,13 +232,21 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell/Support, HMS, EMR, Telephony, Agile methodology.</p>
                     </div>
                 </div>
+
                 <!-- Glassco -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('glassco')">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer"
+                        onclick="toggleCaseStudy('glassco')">
                         Glassco - Zendesk Sell CRM Implementation
                     </h3>
                     <div id="glassco" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Equipment Project" class="rounded-lg mb-4">
+                        <div class="flex justify-center mb-4">
+                            <img
+                                src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Lab Equipment Project"
+                                class="rounded-lg shadow-md w-full max-w-md mx-auto"
+                            >
+                        </div>
                         <!-- Replace with image3.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Glassco Laboratory Equipment (1000+ employees, 25 sales agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual sales tracking, limited lead management, expense calculation issues, lack of integrations.</p>
@@ -232,13 +255,21 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell, Google Maps API, SAP, LinkedIn, WhatsApp, Agile methodology.</p>
                     </div>
                 </div>
+
                 <!-- Everise -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('everise')">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer"
+                        onclick="toggleCaseStudy('everise')">
                         Everise - Zendesk Suite + ITSM Implementation
                     </h3>
                     <div id="everise" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Customer Experience Project" class="rounded-lg mb-4">
+                        <div class="flex justify-center mb-4">
+                            <img
+                                src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="Customer Experience Project"
+                                class="rounded-lg shadow-md w-full max-w-md mx-auto"
+                            >
+                        </div>
                         <!-- Replace with image4.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Everise (Customer Experience, 460,000+ employees)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Difficult ticket logging, inefficient ITSM, limited reporting, lack of integration.</p>
@@ -247,13 +278,21 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Device42, Agile methodology.</p>
                     </div>
                 </div>
+
                 <!-- QualityKiosk -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('qualitykiosk')">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer"
+                        onclick="toggleCaseStudy('qualitykiosk')">
                         QualityKiosk - Zendesk Suite + ITSM Implementation
                     </h3>
                     <div id="qualitykiosk" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="IT Services Project" class="rounded-lg mb-4">
+                        <div class="flex justify-center mb-4">
+                            <img
+                                src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                                alt="IT Services Project"
+                                class="rounded-lg shadow-md w-full max-w-md mx-auto"
+                            >
+                        </div>
                         <!-- Replace with image5.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> QualityKiosk (IT Services)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Inefficient ITSM workflows, lack of unified system, limited self-service, no integration.</p>
@@ -262,13 +301,21 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Jira, Salesforce, SAP, Agile methodology.</p>
                     </div>
                 </div>
+
                 <!-- The Art of Living -->
                 <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('artofliving')">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer"
+                        onclick="toggleCaseStudy('artofliving')">
                         The Art of Living - Salesforce Sales & Marketing Cloud
                     </h3>
                     <div id="artofliving" class="case-study-content">
-                        <img src="images/image5.png" alt="Non-Profit Project" class="rounded-lg mb-4">
+                        <div class="flex justify-center mb-4">
+                            <img
+                                src="images/image5.png"
+                                alt="Non-Profit Project"
+                                class="rounded-lg shadow-md w-full max-w-md mx-auto"
+                            >
+                        </div>
                         <!-- Replace with image6.png from SM&APM Portfolio.pptx -->
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> The Art of Living (Non-Profit, Wellness)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Disconnected sales/marketing, inefficient lead management, limited reporting, manual data handling.</p>
@@ -277,6 +324,7 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Salesforce Sales/Marketing Cloud, Agile methodology.</p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
@@ -287,7 +335,11 @@
             <h2 class="text-3xl font-bold text-gray-900 mb-6">Certifications</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="images/image4.png" alt="CSM Badge" class="w-16 h-16 mr-4">
+                    <img
+                        src="images/image4.png"
+                        alt="Certified ScrumMaster (CSM) badge"
+                        class="rounded-full w-16 h-16 mr-4 shadow-md object-cover"
+                    >
                     <!-- Replace with image7.png from SM&APM Portfolio.pptx -->
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Certified ScrumMaster (CSM)</h3>
@@ -295,7 +347,11 @@
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="images/image3.png" alt="Google PM Badge" class="w-16 h-16 mr-4">
+                    <img
+                        src="images/image3.png"
+                        alt="Google Project Management badge"
+                        class="rounded-full w-16 h-16 mr-4 shadow-md object-cover"
+                    >
                     <!-- Replace with image8.png from SM&APM Portfolio.pptx -->
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Google Project Management</h3>
@@ -303,7 +359,11 @@
                     </div>
                 </div>
                 <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="images/image2.png" alt="Gen AI Badge" class="w-16 h-16 mr-4">
+                    <img
+                        src="images/image2.png"
+                        alt="Generative AI overview badge"
+                        class="rounded-full w-16 h-16 mr-4 shadow-md object-cover"
+                    >
                     <!-- Replace with image9.png from SM&APM Portfolio.pptx -->
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Generative AI Overview for Project Managers</h3>
@@ -318,8 +378,12 @@
     <section id="contact" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-3xl font-bold text-gray-900 mb-6">Contact Me</h2>
-            <p class="text-lg text-gray-700 mb-6">Let’s work together to enhance your Agile team performance! Connect with me on Upwork to discuss your project needs.</p>
-            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" class="bg-blue-900 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-800">
+            <p class="text-lg text-gray-700 mb-6">
+                Let’s work together to enhance your Agile team performance! Connect with me on Upwork to discuss your project needs.
+            </p>
+            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620"
+               target="_blank"
+               class="bg-blue-900 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-800">
                 Connect on Upwork
             </a>
         </div>

@@ -1,0 +1,540 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Management Reports</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chrono-node/1.3.11/chrono.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
+</head>
+<body class="bg-gray-200 font-sans">
+  <div id="root"></div>
+  <script type="text/babel">
+    // Inline CSV data for Work Estimation
+    const workEstimationCsv = `WBS Level,Task Name,Owner,Complexity,Estimated Effort (Person-Days)
+1.1,Salesforce Environment Setup,Salesforce Admin,M,10
+1.1.1,Development Environment Setup,Salesforce Admin,L,3
+1.1.2,Testing Environment Setup,Salesforce Admin,L,3
+1.1.3,Production Environment Setup,Salesforce Admin,M,4
+1.2,Requirements Documentation,Business Analyst,H,15
+1.2.1,Stakeholder Interviews,Business Analyst,L,5
+1.2.2,Requirement Workshops,Business Analyst,L,5
+1.2.3,User Story Documentation,Business Analyst,L,5
+1.3,Solution Design,Solution Architect,H,20
+1.3.1,Data Modeling,Solution Architect,M,6
+1.3.2,Security Design,Security Architect,M,6
+1.3.3,Integration Design,Integration Architect,H,8
+1.4,Configuration,Salesforce Consultant,H,25
+1.4.1,Workflow Configuration,Salesforce Consultant,M,7
+1.4.2,Validation Rules,Salesforce Consultant,M,8
+1.4.3,Custom Objects and Fields,Salesforce Consultant,M,10
+1.5,Data Migration,Data Migration Lead,H,15
+1.5.1,Data Cleaning,Data Analyst,M,5
+1.5.2,Migration Strategy Development,Data Migration Lead,M,5
+1.5.3,Execution of Migration,Data Migration Lead,M,5
+1.6,Integration Development,Integration Developer,H,20
+1.6.1,API Configuration,Integration Developer,M,7
+1.6.2,Middleware Setup,Integration Developer,M,7
+1.6.3,Testing and Validation of Integrations,QA Engineer,M,6
+1.7,Testing,QA Lead,H,20
+1.7.1,Unit Testing,QA Engineer,M,7
+1.7.2,System Testing,QA Engineer,M,7
+1.7.3,User Acceptance Testing (UAT),Business Analyst,M,6
+1.8,Training,Training Lead,M,10
+1.8.1,Training Material Development,Training Lead,M,5
+1.8.2,Training Sessions,Training Lead,M,5
+1.9,Go-Live and Support,Deployment Lead,M,10
+1.9.1,Production Deployment,Deployment Lead,M,5
+1.9.2,Hypercare Support,Support Team,M,5`;
+
+    // Inline CSV data for WBS Salesforce
+    const wbsCsv = `Milestone,WBS ID,Task,Task Owner,Duration (days),Description,Notes
+Salesforce Implementation Project,1.0,-,Project Manager,120,Overall project covering setup, configuration, integration, and deployment.,
+Salesforce Environment Setup,1.1,-,Salesforce Admin,10,Initial setup of Salesforce environments.,
+,1.1.1,Development Environment Setup,Salesforce Admin,3,Configure development environment.,
+,1.1.2,Testing Environment Setup,Salesforce Admin,3,Configure testing environment.,
+,1.1.3,Production Environment Setup,Salesforce Admin,4,Configure production environment.,
+Requirements Documentation,1.2,-,Business Analyst,15,Collect and document business requirements.,
+,1.2.1,Stakeholder Interviews,Business Analyst,5,Conduct discussions with key stakeholders.,
+,1.2.2,Requirement Workshops,Business Analyst,5,Conduct workshops to gather detailed requirements.,
+,1.2.3,User Story Documentation,Business Analyst,5,Define and document user stories.,
+Solution Design,1.3,-,Solution Architect,20,Design system architecture, data model, and security.,
+,1.3.1,Data Modeling,Solution Architect,6,Define entities, relationships, and attributes.,
+,1.3.2,Security Design,Security Architect,6,Define roles, permissions, and access levels.,
+,1.3.3,Integration Design,Integration Architect,8,Define integration points and strategy.,
+Configuration,1.4,-,Salesforce Consultant,25,Configure Sales Cloud features and automation.,
+,1.4.1,Workflow Configuration,Salesforce Consultant,7,Define and implement workflows.,
+,1.4.2,Validation Rules,Salesforce Consultant,8,Create and test validation rules.,
+,1.4.3,Custom Objects and Fields,Salesforce Consultant,10,Create custom objects and fields as needed.,
+Data Migration,1.5,-,Data Migration Lead,15,Migrate data from legacy systems.,
+,1.5.1,Data Cleaning,Data Analyst,5,Identify and clean legacy data.,
+,1.5.2,Migration Strategy Development,Data Migration Lead,5,Develop data migration approach.,
+,1.5.3,Execution of Migration,Data Migration Lead,5,Migrate and validate data.,
+Integration Development,1.6,-,Integration Developer,20,Develop and configure system integrations.,
+,1.6.1,API Configuration,Integration Developer,7,Set up and configure APIs.,
+,1.6.2,Middleware Setup,Integration Developer,7,Implement middleware solutions.,
+,1.6.3,Testing and Validation of Integrations,QA Engineer,6,Ensure proper data flow between systems.,
+Testing,1.7,-,QA Lead,20,Conduct comprehensive system testing.,
+,1.7.1,Unit Testing,QA Engineer,7,Test individual system components.,
+,1.7.2,System Testing,QA Engineer,7,Validate overall system functionality.,
+,1.7.3,User Acceptance Testing (UAT),Business Analyst,6,Conduct final testing with end-users.,
+Training,1.8,-,Training Lead,10,Develop and deliver training sessions.,
+,1.8.1,Training Material Development,Training Lead,5,Create user manuals and guides.,
+,1.8.2,Training Sessions,Training Lead,5,Conduct training for end-users.,
+Go-Live and Support,1.9,-,Deployment Lead,10,Deploy the solution and provide hypercare support.,
+,1.9.1,Production Deployment,Deployment Lead,5,Deploy the final solution to production.,
+,1.9.2,Hypercare Support,Support Team,5,Provide post-go-live support for initial stabilization.`;
+
+    // Main React component
+    const ProjectManagementReports = () => {
+      const [selectedReport, setSelectedReport] = React.useState('workEstimation');
+      const [selectedMethodology, setSelectedMethodology] = React.useState('Waterfall');
+      const [workEstimationData, setWorkEstimationData] = React.useState([]);
+      const [
+
+wbsData, setWbsData] = React.useState([]);
+      const [loading, setLoading] = React.useState(true);
+      const [sortConfig, setSortConfig] = React.useState({ key: null, direction: 'asc' });
+
+      // Processing and cleaning Work Estimation data
+      const processWorkEstimationData = (rawData) => {
+        console.log('Processing Work Estimation Data:', rawData);
+        return rawData.map(row => ({
+          wbsLevel: row["WBS Level"] ? row["WBS Level"].trim() : "",
+          taskName: row["Task Name"] ? row["Task Name"].trim() : "",
+          owner: row["Owner"] ? row["Owner"].trim() : "",
+          complexity: row["Complexity"] ? row["Complexity"].trim() : "",
+          effort: row["Estimated Effort (Person-Days)"] ? parseFloat(row["Estimated Effort (Person-Days)"]) : 0
+        })).filter(row => row.wbsLevel && row.taskName && !isNaN(row.effort));
+      };
+
+      // Processing and cleaning WBS data
+      const processWbsData = (rawData) => {
+        console.log('Processing WBS Data:', rawData);
+        return rawData.map(row => ({
+          milestone: row["Milestone"] ? row["Milestone"].trim() : "",
+          wbsId: row["WBS ID"] ? row["WBS ID"].trim() : "",
+          task: row["Task"] ? row["Task"].trim() : "",
+          taskOwner: row["Task Owner"] ? row["Task Owner"].trim() : "",
+          duration: row["Duration (days)"] ? parseFloat(row["Duration (days)"]) : 0,
+          description: row["Description"] ? row["Description"].trim() : "",
+          notes: row["Notes"] ? row["Notes"].trim() : ""
+        })).filter(row => row.wbsId && (row.task || row.milestone) && !isNaN(row.duration));
+      };
+
+      // Loading CSV data
+      React.useEffect(() => {
+        console.log('Starting data load...');
+        Promise.all([
+          new Promise(resolve => {
+            Papa.parse(workEstimationCsv, {
+              header: true,
+              skipEmptyLines: true,
+              transformHeader: header => header.trim().replace(/^"|"$/g, ''),
+              transform: (value, header) => value.trim().replace(/^"|"$/g, ''),
+              complete: (results) => {
+                console.log('Work Estimation CSV Parsed:', results.data);
+                setWorkEstimationData(processWorkEstimationData(results.data));
+                resolve();
+              },
+              error: (err) => {
+                console.error('Error parsing Work Estimation CSV:', err);
+                resolve();
+              }
+            });
+          }),
+          new Promise(resolve => {
+            Papa.parse(wbsCsv, {
+              header: true,
+              skipEmptyLines: true,
+              transformHeader: header => header.trim().replace(/^"|"$/g, ''),
+              transform: (value, header) => value.trim().replace(/^"|"$/g, ''),
+              complete: (results) => {
+                console.log('WBS CSV Parsed:', results.data);
+                setWbsData(processWbsData(results.data));
+                resolve();
+              },
+              error: (err) => {
+                console.error('Error parsing WBS CSV:', err);
+                resolve();
+              }
+            });
+          })
+        ]).then(() => {
+          console.log('Data loading complete.');
+          setLoading(false);
+        });
+      }, []);
+
+      // Sorting function
+      const sortData = (data, key, direction) => {
+        return [...data].sort((a, b) => {
+          const aValue = a[key];
+          const bValue = b[key];
+          if (typeof aValue === 'number') {
+            return direction === 'asc' ? aValue - bValue : bValue - aValue;
+          }
+          return direction === 'asc' 
+            ? aValue.localeCompare(bValue)
+            : bValue.localeCompare(aValue);
+        });
+      };
+
+      const handleSort = (key) => {
+        const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+        setSortConfig({ key, direction });
+      };
+
+      // Handle methodology button click
+      const handleMethodologyChange = (methodology) => {
+        setSelectedMethodology(methodology);
+        setSelectedReport('workEstimation'); // Reset to Work Estimation on methodology change
+        setSortConfig({ key: null, direction: 'asc' }); // Reset sorting
+      };
+
+      // Preparing chart data for Work Estimation
+      const workEstimationBarChartData = workEstimationData.reduce((acc, row) => {
+        const wbsTopLevel = row.wbsLevel.split('.')[0] + '.' + row.wbsLevel.split('.')[1];
+        const existing = acc.find(item => item.wbsLevel === wbsTopLevel);
+        if (existing) {
+          existing.effort += row.effort;
+        } else {
+          acc.push({ wbsLevel: wbsTopLevel, effort: row.effort });
+        }
+        return acc;
+      }, []);
+
+      const workEstimationPieChartData = workEstimationData.reduce((acc, row) => {
+        const existing = acc.find(item => item.owner === row.owner);
+        if (existing) {
+          existing.effort += row.effort;
+        } else {
+          acc.push({ owner: row.owner, effort: row.effort });
+        }
+        return acc;
+      }, []);
+
+      // Preparing chart data for WBS
+      const wbsBarChartData = wbsData.reduce((acc, row) => {
+        if (row.wbsId.match(/^\d+\.\d+$/)) {
+          const existing = acc.find(item => item.milestone === row.milestone);
+          if (existing) {
+            existing.duration += row.duration;
+          } else {
+            acc.push({ milestone: row.milestone, duration: row.duration });
+          }
+        }
+        return acc;
+      }, []);
+
+      const wbsPieChartData = wbsData.reduce((acc, row) => {
+        const existing = acc.find(item => item.taskOwner === row.taskOwner);
+        if (existing) {
+          existing.duration += row.duration;
+        } else {
+          acc.push({ taskOwner: row.taskOwner, duration: row.duration });
+        }
+        return acc;
+      }, []);
+
+      // Rendering loading state
+      if (loading) {
+        return (
+          <div className="flex justify-center items-center h-screen">
+            <div className="text-xl font-semibold text-gray-700">Loading...</div>
+          </div>
+        );
+      }
+
+      // Sorting data
+      const sortedWorkEstimationData = sortConfig.key ? sortData(workEstimationData, sortConfig.key, sortConfig.direction) : workEstimationData;
+      const sortedWbsData = sortConfig.key ? sortData(wbsData, sortConfig.key, sortConfig.direction) : wbsData;
+
+      // Rendering main content
+      return (
+        <div className="container mx-auto p-6">
+          <h1 className="text-3xl font-bold text-center text-blue-800 mb-6">
+            Project Management Reports
+          </h1>
+
+          {/* Navigation Buttons */}
+          <div className="flex space-x-2 mb-6">
+            {['Waterfall', 'Agile', 'XP', 'IT Support [Kanban]'].map(methodology => (
+              <button
+                key={methodology}
+                className={`px-4 py-2 rounded-t-lg font-semibold text-sm ${
+                  selectedMethodology === methodology
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-300 text-gray-700 hover:bg-gray-400'
+                }`}
+                onClick={() => handleMethodologyChange(methodology)}
+              >
+                {methodology}
+              </button>
+            ))}
+          </div>
+
+          {/* Dropdown */}
+          <div className="mb-6">
+            <label htmlFor="reportSelect" className="text-lg font-semibold mr-4">Select Report:</label>
+            <select
+              id="reportSelect"
+              className="p-2 border rounded-md bg-white text-gray-700"
+              value={selectedReport}
+              onChange={(e) => setSelectedReport(e.target.value)}
+            >
+              <option value="workEstimation">Work Estimation</option>
+              <option value="wbsSalesforce">WBS Salesforce</option>
+            </select>
+          </div>
+
+          {/* Work Estimation Report */}
+          {selectedReport === 'workEstimation' && (
+            <>
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-blue-500">
+                <h2 className="text-xl font-semibold mb-4">Work Estimation Summary ({selectedMethodology})</h2>
+                <p className="text-gray-700">
+                  The Work Estimation report outlines {workEstimationData.length} tasks with a total effort of {workEstimationData.reduce((sum, row) => sum + row.effort, 0)} person-days under {selectedMethodology} methodology. Configuration (25 person-days) and Solution Design (20 person-days) are the most effort-intensive. The Salesforce Admin's concentrated workload on environment setups (10 person-days) highlights a key dependency.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 overflow-x-auto border-t-4 border-blue-500">
+                <h2 className="text-xl font-semibold mb-4">Task Details</h2>
+                <table className="min-w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-blue-100">
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('wbsLevel')}>
+                        WBS Level {sortConfig.key === 'wbsLevel' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('taskName')}>
+                        Task Name {sortConfig.key === 'taskName' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('owner')}>
+                        Owner {sortConfig.key === 'owner' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('complexity')}>
+                        Complexity {sortConfig.key === 'complexity' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('effort')}>
+                        Estimated Effort (Person-Days) {sortConfig.key === 'effort' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedWorkEstimationData.map((row, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 hover:bg-gray-100' : 'bg-white hover:bg-gray-100'}>
+                        <td className="px-4 py-2 border">{row.wbsLevel}</td>
+                        <td className="px-4 py-2 border">{row.taskName}</td>
+                        <td className="px-4 py-2 border">{row.owner}</td>
+                        <td className="px-4 py-2 border">{row.complexity}</td>
+                        <td className="px-4 py-2 border">{row.effort}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-blue-500">
+                <h2 className="text-xl font-semibold mb-4">Effort by WBS Level</h2>
+                <Recharts.ResponsiveContainer width="100%" height={400}>
+                  <Recharts.BarChart data={workEstimationBarChartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                    <Recharts.CartesianGrid strokeDasharray="3 3" />
+                    <Recharts.XAxis dataKey="wbsLevel" label={{ value: 'WBS Level', position: 'bottom', offset: 10, fontSize: 12 }} tick={{ fontSize: 12 }} />
+                    <Recharts.YAxis label={{ value: 'Effort (Person-Days)', angle: -90, position: 'insideLeft', fontSize: 12 }} tick={{ fontSize: 12 }} />
+                    <Recharts.Tooltip />
+                    <Recharts.Legend />
+                    <Recharts.Bar dataKey="effort" fill="#3B82F6" />
+                  </Recharts.BarChart>
+                </Recharts.ResponsiveContainer>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-blue-500">
+                <h2 className="text-xl font-semibold mb-4">Effort Distribution by Owner</h2>
+                <Recharts.ResponsiveContainer width="100%" height={400}>
+                  <Recharts.PieChart>
+                    <Recharts.Pie
+                      data={workEstimationPieChartData}
+                      dataKey="effort"
+                      nameKey="owner"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={150}
+                      fill="#8884d8"
+                      label={{ fontSize: 12 }}
+                    >
+                      {workEstimationPieChartData.map((entry, index) => (
+                        <Recharts.Cell key={`cell-${index}`} fill={['#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#6B7280'][index % 7]} />
+                      ))}
+                    </Recharts.Pie>
+                    <Recharts.Tooltip />
+                    <Recharts.Legend />
+                  </Recharts.PieChart>
+                </Recharts.ResponsiveContainer>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                <h2 className="text-xl font-semibold mb-4">Conclusion</h2>
+                <p className="text-gray-700">
+                  The Work Estimation report under {selectedMethodology} highlights significant effort in Configuration, Solution Design, Integration Development, and Testing (20-25 person-days each). The Salesforce Consultant and Solution Architect have the heaviest workloads. Prioritizing resources for these tasks and supporting the Salesforce Admin during environment setups will be critical for success.
+                </p>
+              </div>
+            </>
+          )}
+
+          {/* WBS Salesforce Report */}
+          {selectedReport === 'wbsSalesforce' && (
+            <>
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-green-500">
+                <h2 className="text-xl font-semibold mb-4">WBS Salesforce Summary ({selectedMethodology})</h2>
+                <p className="text-gray-700">
+                  The WBS report details {wbsData.length} tasks and milestones, totaling {wbsData.reduce((sum, row) => sum + row.duration, 0)} days under {selectedMethodology} methodology. Configuration (25 days) and Solution Design (20 days) are the most time-intensive phases. The Salesforce Admin's role in environment setups (10 days) is a critical early dependency.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 overflow-x-auto border-t-4 border-green-500">
+                <h2 className="text-xl font-semibold mb-4">Task Details</h2>
+                <table className="min-w-full table-auto border-collapse">
+                  <thead>
+                    <tr className="bg-green-100">
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('milestone')}>
+                        Milestone {sortConfig.key === 'milestone' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('wbsId')}>
+                        WBS ID {sortConfig.key === 'wbsId' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('task')}>
+                        Task {sortConfig.key === 'task' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('taskOwner')}>
+                        Task Owner {sortConfig.key === 'taskOwner' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('duration')}>
+                        Duration (days) {sortConfig.key === 'duration' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('description')}>
+                        Description {sortConfig.key === 'description' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                      <th className="px-4 py-2 border cursor-pointer" onClick={() => handleSort('notes')}>
+                        Notes {sortConfig.key === 'notes' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedWbsData.map((row, index) => (
+                      <tr key={index} className={index % 2 === 0 ? 'bg-gray-50 hover:bg-gray-100' : 'bg-white hover:bg-gray-100'}>
+                        <td className="px-4 py-2 border">{row.milestone}</td>
+                        <td className="px-4 py-2 border">{row.wbsId}</td>
+                        <td className="px-4 py-2 border">{row.task}</td>
+                        <td className="px-4 py-2 border">{row.taskOwner}</td>
+                        <td className="px-4 py-2 border">{row.duration}</td>
+                        <td className="px-4 py-2 border">{row.description}</td>
+                        <td className="px-4 py-2 border">{row.notes}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-green-500">
+                <h2 className="text-xl font-semibold mb-4">Duration by Milestone</h2>
+                <Recharts.ResponsiveContainer width="100%" height={400}>
+                  <Recharts.BarChart data={wbsBarChartData} margin={{ top: 20, right: 30, left: 20, bottom: 60 }}>
+                    <Recharts.CartesianGrid strokeDasharray="3 3" />
+                    <Recharts.XAxis dataKey="milestone" label={{ value: 'Milestone', position: 'bottom', offset: 10, fontSize: 12 }} tick={{ fontSize: 12, angle: -45, textAnchor: 'end' }} />
+                    <Recharts.YAxis label={{ value: 'Duration (Days)', angle: -90, position: 'insideLeft', fontSize: 12 }} tick={{ fontSize: 12 }} />
+                    <Recharts.Tooltip />
+                    <Recharts.Legend />
+                    <Recharts.Bar dataKey="duration" fill="#10B981" />
+                  </Recharts.BarChart>
+                </Recharts.ResponsiveContainer>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md mb-6 border-t-4 border-green-500">
+                <h2 className="text-xl font-semibold mb-4">Duration Distribution by Task Owner</h2>
+                <Recharts.ResponsiveContainer width="100%" height={400}>
+                  <Recharts.PieChart>
+                    <Recharts.Pie
+                      data={wbsPieChartData}
+                      dataKey="duration"
+                      nameKey="taskOwner"
+                      cx="50%"
+                      cy="50%"
+                      outerRadius={150}
+                      fill="#8884d8"
+                      label={{ fontSize: 12 }}
+                    >
+                      {wbsPieChartData.map((entry, index) => (
+                        <Recharts.Cell key={`cell-${index}`} fill={['#10B981', '#3B82F6', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899', '#6B7280'][index % 7]} />
+                      ))}
+                    </Recharts.Pie>
+                    <Recharts.Tooltip />
+                    <Recharts.Legend />
+                  </Recharts.PieChart>
+                </Recharts.ResponsiveContainer>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-500">
+                <h2 className="text-xl font-semibold mb-4">Conclusion</h2>
+                <p className="text-gray-700">
+                  The WBS report under {selectedMethodology} structures the project into key milestones, with Configuration and Solution Design requiring the most time (25 and 20 days, respectively). The Salesforce Consultant and Solution Architect are pivotal, while the Salesforce Admin's early environment setups (10 days) are critical to avoid bottlenecks. Effective coordination during integration and testing will ensure project success.
+                </p>
+              </div>
+            </>
+          )}
+        </div>
+      );
+    };
+
+    // Rendering the app
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<ProjectManagementReports />);
+  </script>
+</body>
+</html>

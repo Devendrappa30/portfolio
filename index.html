@@ -4,214 +4,187 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Devendrappa - Agile Practitioner Portfolio</title>
-    <!-- Tailwind CSS CDN for utility-first styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Smooth scrolling for anchor links */
         .smooth-scroll {
             scroll-behavior: smooth;
         }
-        /* Styling for case study content, hidden by default */
         .case-study-content {
             display: none;
-            overflow: hidden; /* Ensures smooth transition */
-            transition: max-height 0.5s ease-in-out; /* Smooth animation for expanding/collapsing */
-            max-height: 0; /* Initially collapsed */
         }
-        /* Active state for case study content to show it */
         .case-study-content.active {
             display: block;
-            max-height: 500px; /* Max height to allow expansion, adjust as needed */
-            /* A large enough value to accommodate content, yet allow transition */
         }
-        /* Custom styles for the Resources dropdown menu */
+        /* Resources Dropdown Custom Styles */
         .dropdown-content {
-            display: none; /* Hidden by default */
-            position: absolute; /* Positioned relative to the parent dropdown */
-            background-color: white; /* White background for the dropdown items */
-            min-width: 160px; /* Minimum width for the dropdown */
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2); /* Subtle shadow for depth */
-            z-index: 30; /* Ensures it appears above other content */
-            margin-top: 0.5rem; /* Small space below the button */
-            border-radius: 0.375rem; /* Rounded corners for the dropdown box */
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 30;
+            margin-top: 0.5rem;
+            border-radius: 0.375rem;
         }
-        /* Styling for individual links within the dropdown */
         .dropdown-content a {
-            color: #1e3a8a; /* Dark blue text color */
-            padding: 0.5rem 1rem; /* Padding for click area */
-            text-decoration: none; /* No underline */
-            display: block; /* Each link takes full width */
-            border-radius: 0.375rem; /* Rounded corners for individual items */
+            color: #1e3a8a;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: block;
+            border-radius: 0.375rem;
         }
-        /* Hover effect for dropdown links */
         .dropdown-content a:hover {
-            background-color: #dbeafe; /* Light blue background on hover */
+            background-color: #dbeafe;
         }
-        /* Show dropdown content on hover or focus-within (for keyboard navigation) */
         .dropdown:hover .dropdown-content,
         .dropdown:focus-within .dropdown-content {
             display: block;
         }
-        /* Arrow icon for the dropdown button */
         .dropdown-btn:after {
             content: '';
-            border: solid #fff; /* White border for the arrow */
-            border-width: 0 2px 2px 0; /* Creates a V-shape */
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
             display: inline-block;
             padding: 3px;
-            margin-left: 6px; /* Space between text and arrow */
-            transform: rotate(45deg); /* Rotates to point down */
+            margin-left: 6px;
+            transform: rotate(45deg);
             -webkit-transform: rotate(45deg);
-            vertical-align: middle; /* Aligns with text */
+            vertical-align: middle;
         }
     </style>
 </head>
 <body class="bg-gray-100 font-sans smooth-scroll">
-    <!-- Navigation Bar -->
+    <!-- Navigation -->
     <nav class="bg-blue-900 text-white sticky top-0 z-10 shadow-md">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <!-- Brand/Logo -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+            <div class="flex items-center">
                 <h1 class="text-xl font-bold">Devendrappa - Agile Practitioner</h1>
-                <!-- Navigation Links -->
-                <div class="flex items-center space-x-4">
-                    <a href="#about" class="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">About</a>
-                    <a href="#skills" class="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">Skills</a>
-                    <a href="#case-studies" class="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">Case Studies</a>
-                    <a href="#certifications" class="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">Certifications</a>
-                    <!-- Resources Dropdown Menu -->
-                    <div class="dropdown relative">
-                        <button class="dropdown-btn hover:bg-blue-700 px-3 py-2 rounded-md focus:outline-none flex items-center transition duration-300">
-                            Resources
-                        </button>
-                        <div class="dropdown-content absolute right-0 mt-2 shadow-lg rounded-md">
-                            <a href="MRDH.html" class="hover:bg-blue-100">Metrics and Dashboard</a>
-                            <a href="PMRH.html" class="hover:bg-blue-100">Project Resource</a>
-                            <a href="Reports & Metrics.html" class="hover:bg-blue-100">Reports and Metrics</a>
-                        </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="#about" class="hover:bg-blue-700 px-3 py-2 rounded-md">About</a>
+                <a href="#skills" class="hover:bg-blue-700 px-3 py-2 rounded-md">Skills</a>
+                <a href="#case-studies" class="hover:bg-blue-700 px-3 py-2 rounded-md">Case Studies</a>
+                <a href="#certifications" class="hover:bg-blue-700 px-3 py-2 rounded-md">Certifications</a>
+                <!-- Resources Dropdown -->
+                <div class="dropdown relative">
+                    <button class="dropdown-btn hover:bg-blue-700 px-3 py-2 rounded-md focus:outline-none flex items-center">
+                        Resources
+                    </button>
+                    <div class="dropdown-content absolute right-0 mt-2 shadow-lg">
+                        <a href="MRDH.html">Metrics and Dashboard</a>
+                        <a href="PMRH.html">Project Resource</a>
                     </div>
-                    <a href="#contact" class="hover:bg-blue-700 px-3 py-2 rounded-md transition duration-300">Contact</a>
                 </div>
+                <a href="#contact" class="hover:bg-blue-700 px-3 py-2 rounded-md">Contact</a>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
-    <!-- Hero Section: Introduction and Call to Action -->
-    <section class="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-20 text-center shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-4xl sm:text-5xl font-extrabold mb-4 animate-fade-in-down">Certified Scrum Master & Agile Practitioner</h2>
-            <p class="text-xl sm:text-2xl mb-8 opacity-90 animate-fade-in-up">
-                "Helping teams deliver high-quality software through Agile & Scrum practices"
-            </p>
-            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" 
-               class="bg-yellow-400 text-blue-900 px-8 py-3 rounded-full font-bold text-lg 
-                      hover:bg-yellow-300 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
-                Hire Me on Upwork
-            </a>
+    <!-- Hero Section -->
+    <section class="bg-blue-800 text-white py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4">Certified Scrum Master & Agile Practitioner</h2>
+            <p class="text-xl mb-6">"Helping teams deliver high-quality software through Agile & Scrum practices"</p>
+            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" class="bg-yellow-400 text-blue-900 px-6 py-3 rounded-md font-semibold hover:bg-yellow-500">Hire Me on Upwork</a>
         </div>
     </section>
 
-    <!-- About Section: Professional Summary -->
-    <section id="about" class="py-16 bg-white shadow-inner">
+    <!-- About Section -->
+    <section id="about" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center border-b-2 border-blue-600 pb-2">About Me</h2>
-            <div class="flex flex-col md:flex-row items-center md:space-x-8">
-                <div class="md:w-1/3 mb-6 md:mb-0 flex-shrink-0">
-                    <img src="images/Myimage.png" alt="Devendrappa Profile"
-                         class="rounded-full shadow-lg mx-auto w-48 h-48 object-cover border-4 border-blue-200"
-                         onerror="this.onerror=null;this.src='https://placehold.co/192x192/E0E0E0/333333';">
-                </div>
-                <div class="md:w-2/3 text-gray-700 text-lg leading-relaxed">
-                    <p class="mb-4">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">About Me</h2>
+            <div class="flex flex-col md:flex-row items-center">
+                <div class="md:w-1/2">
+                    <p class="text-lg text-gray-700 mb-4">
                         I am a Certified Scrum Master (CSM) with 10 years of experience in Agile project management. My expertise lies in facilitating Agile ceremonies (daily stand-ups, sprint planning, retrospectives) and driving process improvements for teams across diverse industries.
                     </p>
-                    <p>
+                    <p class="text-lg text-gray-700">
                         My goal is to maximize productivity, foster continuous improvement, and deliver high-quality software. I specialize in Scrum, Kanban, XP, LeSS, and SAFe frameworks, with strong skills in coaching, stakeholder communication, and metrics-driven delivery.
                     </p>
                 </div>
+                <div class="md:w-1/2 mt-6 md:mt-0 md:pl-8">
+                    <img src="images/Myimage.png" alt="Agile Team" class="rounded-lg shadow-md">
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Skills Section: Key Competencies -->
-    <section id="skills" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 border-b-2 border-blue-600 pb-2">Skills and Competencies</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Skill Card: Agile Methodologies -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Agile Methodologies</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
+    <!-- Skills Section -->
+    <section id="skills" class="bg-gray-200 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Skills and Competencies</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Agile Methodologies</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
                         <li>Scrum</li>
                         <li>Kanban</li>
-                        <li>XP (Extreme Programming)</li>
-                        <li>LeSS (Large-Scale Scrum)</li>
-                        <li>SAFe (Scaled Agile Framework)</li>
+                        <li>XP</li>
+                        <li>LeSS</li>
+                        <li>SAFe</li>
                     </ul>
                 </div>
-                <!-- Skill Card: Facilitation & Coaching -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-green-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Facilitation & Coaching</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
-                        <li>Sprint Planning, Daily Scrum, Review & Retrospectives</li>
-                        <li>Workshops & Brainstorming</li>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Facilitation & Coaching</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
+                        <li>Sprint Planning</li>
+                        <li>Daily Scrum</li>
+                        <li>Sprint Review & Retrospectives</li>
+                        <li>Workshops</li>
                         <li>Mentoring Teams & Stakeholders</li>
                     </ul>
                 </div>
-                <!-- Skill Card: Conflict Resolution -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-red-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Conflict Resolution</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
-                        <li>Identifying & Addressing Conflicts</li>
-                        <li>Mediating Team & Stakeholder Issues</li>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Conflict Resolution</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
+                        <li>Identifying Conflicts</li>
+                        <li>Resolving Team & Stakeholder Issues</li>
                         <li>Ensuring Project Alignment</li>
                     </ul>
                 </div>
-                <!-- Skill Card: Communication -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-yellow-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Communication</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
-                        <li>Clear & Effective Communication Strategies</li>
-                        <li>Stakeholder Engagement & Reporting</li>
-                        <li>Ensuring Transparency</li>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Communication</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
+                        <li>Clear & Effective Communication</li>
+                        <li>Stakeholder Engagement</li>
+                        <li>Transparency in Reporting</li>
                     </ul>
                 </div>
-                <!-- Skill Card: Tools -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Tools</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
-                        <li>Jira, Confluence, Trello</li>
-                        <li>Zendesk, Salesforce</li>
-                        <li>Microsoft Office Suite</li>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Tools</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
+                        <li>Jira</li>
+                        <li>Confluence</li>
+                        <li>Trello</li>
+                        <li>Zendesk</li>
+                        <li>Salesforce</li>
                     </ul>
                 </div>
-                <!-- Skill Card: Metrics -->
-                <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-indigo-600 hover:shadow-xl transition duration-300">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-3">Metrics</h3>
-                    <ul class="text-gray-700 list-disc list-inside space-y-1">
-                        <li>Burndown Charts, Velocity Tracking</li>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2">Metrics</h3>
+                    <ul class="text-gray-700 list-disc list-inside">
+                        <li>Burndown Charts</li>
+                        <li>Velocity</li>
                         <li>Customer Satisfaction (CSAT)</li>
                         <li>Delivery Defects (DD)</li>
-                        <li>Lead Time & Cycle Time</li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Case Studies Section: Project Highlights -->
-    <section id="case-studies" class="py-16 bg-white">
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center border-b-2 border-blue-600 pb-2">Case Studies</h2>
-            <div class="space-y-8">
-                <!-- Case Study: Narayana Health -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md border-t-4 border-blue-600">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer hover:text-blue-700 transition duration-300" onclick="toggleCaseStudy('narayana')">
-                        Narayana Health - Zendesk Sell & Support Implementation
-                    </h3>
-                    <div id="narayana" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Healthcare Project" class="rounded-lg mb-4 w-full h-48 object-cover">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Case Studies</h2>
+            <div class="space-y-6">
+                <!-- Narayana Health -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('narayana')">Narayana Health - Zendesk Sell & Support Implementation</h3>
+                    <div id="narayana" class="case-study-content" style="display:none;">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Healthcare Project" class="rounded-lg mb-4">
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Narayana Health (Healthcare, 250 agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual lead handling, inefficient support, data migration gaps, lack of self-service.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Sell/Support, automated ticket routing, self-service portal, integrated HMS/EMR/Telephony, 25+ custom reports.</p>
@@ -219,29 +192,23 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell/Support, HMS, EMR, Telephony, Agile methodology.</p>
                     </div>
                 </div>
-                <!-- Case Study: Glassco -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md border-t-4 border-green-600">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer hover:text-blue-700 transition duration-300" onclick="toggleCaseStudy('glassco')">
-                        Glassco - Zendesk Sell CRM Implementation
-                    </h3>
-                    <div id="glassco" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Lab Equipment Project" class="rounded-lg mb-4 w-full h-48 object-cover">
+                <!-- Glassco -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('glassco')">Glassco - Zendesk Sell CRM Implementation</h3>
+                    <div id="glassco" class="case-study-content" style="display:none;">
+                        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Equipment Project" class="rounded-lg mb-4">
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Glassco Laboratory Equipment (1000+ employees, 25 sales agents)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual sales tracking, limited lead management, expense calculation issues, lack of integrations.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Sell, integrated Google Maps/SAP/LinkedIn, multi-channel communication (WhatsApp, Facebook), automated expense management.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved lead conversions, automated expense management, seamless integrations.</p>
+                        <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved sales tracking, higher lead conversions, automated expense management, seamless integrations.</p>
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell, Google Maps API, SAP, LinkedIn, WhatsApp, Agile methodology.</p>
                     </div>
                 </div>
-                <!-- Case Study: Everise -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md border-t-4 border-purple-600">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer hover:text-blue-700 transition duration-300" onclick="toggleCaseStudy('everise')">
-                        Everise - Zendesk Suite + ITSM Implementation
-                    </h3>
-                    <div id="everise" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Customer Experience Project" class="rounded-lg mb-4 w-full h-48 object-cover">
+                <!-- Everise -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('everise')">Everise - Zendesk Suite + ITSM Implementation</h3>
+                    <div id="everise" class="case-study-content" style="display:none;">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Customer Experience Project" class="rounded-lg mb-4">
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> Everise (Customer Experience, 460,000+ employees)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Difficult ticket logging, inefficient ITSM, limited reporting, lack of integration.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Suite, integrated MyndBend/OpsGenie, multi-channel support, HRMS/AD integration, automated SLA tracking.</p>
@@ -249,14 +216,11 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Device42, Agile methodology.</p>
                     </div>
                 </div>
-                <!-- Case Study: QualityKiosk -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md border-t-4 border-yellow-600">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer hover:text-blue-700 transition duration-300" onclick="toggleCaseStudy('qualitykiosk')">
-                        QualityKiosk - Zendesk Suite + ITSM Implementation
-                    </h3>
-                    <div id="qualitykiosk" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="IT Services Project" class="rounded-lg mb-4 w-full h-48 object-cover">
+                <!-- QualityKiosk -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('qualitykiosk')">QualityKiosk - Zendesk Suite + ITSM Implementation</h3>
+                    <div id="qualitykiosk" class="case-study-content" style="display:none;">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="IT Services Project" class="rounded-lg mb-4">
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> QualityKiosk (IT Services)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Inefficient ITSM workflows, lack of unified system, limited self-service, no integration.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Suite, automated ITSM workflows, integrated HRMS/AD, multi-channel support, custom dashboards.</p>
@@ -264,16 +228,11 @@
                         <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Jira, Salesforce, SAP, Agile methodology.</p>
                     </div>
                 </div>
-                <!-- Case Study: The Art of Living -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md border-t-4 border-red-600">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer hover:text-blue-700 transition duration-300" onclick="toggleCaseStudy('artofliving')">
-                        The Art of Living - Salesforce Sales & Marketing Cloud
-                    </h3>
-                    <div id="artofliving" class="case-study-content">
-                        <!-- Royalty-free image representing spiritual community, meditation, or wellness -->
-                        <img src="https://images.unsplash.com/photo-1577401509193-85e7b2a92e10?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                             alt="Spiritual Community Meditation Project" class="rounded-lg mb-4 w-full h-48 object-cover"
-                             onerror="this.onerror=null;this.src='https://placehold.co/800x400/E0E0E0/333333?text=Community+Wellness+Journey';">
+                <!-- The Art of Living -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('artofliving')">The Art of Living - Salesforce Sales & Marketing Cloud</h3>
+                    <div id="artofliving" class="case-study-content" style="display:none;">
+                        <img src="images/image5.png" alt="Non-Profit Project" class="rounded-lg mb-4">
                         <p class="text-gray-700 mb-2"><strong>Client:</strong> The Art of Living (Non-Profit, Wellness)</p>
                         <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Disconnected sales/marketing, inefficient lead management, limited reporting, manual data handling.</p>
                         <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Salesforce Sales & Marketing Cloud, automated workflows, data migration, custom dashboards, mobile access.</p>
@@ -285,42 +244,27 @@
         </div>
     </section>
 
-    <script>
-        // JavaScript function to toggle the visibility of case study content
-        function toggleCaseStudy(id) {
-            const content = document.getElementById(id);
-            // Toggle the 'active' class to show/hide the content
-            content.classList.toggle('active');
-        }
-    </script>
-
     <!-- Certifications Section -->
-    <section id="certifications" class="py-16 bg-gray-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-8 border-b-2 border-blue-600 pb-2">Certifications</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Certification Card: Certified ScrumMaster (CSM) -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-center border-t-4 border-blue-600 hover:shadow-xl transition duration-300">
-                    <img src="images/image4.png" onerror="this.onerror=null;this.src='https://placehold.co/64x64/E0E0E0/333333?text=CSM';"
-                         alt="CSM Badge" class="w-16 h-16 mr-4 flex-shrink-0">
+    <section id="certifications" class="bg-gray-200 py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Certifications</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <img src="images/image4.png" alt="CSM Badge" class="w-16 h-16 mr-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-blue-900">Certified ScrumMaster (SMC)</h3>
+                        <h3 class="text-lg font-semibold text-blue-900">Certified ScrumMaster (CSM)</h3>
                         <p class="text-gray-700">Scrum Alliance</p>
                     </div>
                 </div>
-                <!-- Certification Card: Google Project Management -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-center border-t-4 border-green-600 hover:shadow-xl transition duration-300">
-                    <img src="images/image3.png" onerror="this.onerror=null;this.src='https://placehold.co/64x64/E0E0E0/333333?text=Google+PM';"
-                         alt="Google PM Badge" class="w-16 h-16 mr-4 flex-shrink-0">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <img src="images/image3.png" alt="Google PM Badge" class="w-16 h-16 mr-4">
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Google Project Management</h3>
                         <p class="text-gray-700">Google Career Certificates</p>
                     </div>
                 </div>
-                <!-- Certification Card: Generative AI Overview for Project Managers -->
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-center border-t-4 border-purple-600 hover:shadow-xl transition duration-300">
-                    <img src="images/image2.png" onerror="this.onerror=null;this.src='https://placehold.co/64x64/E0E0E0/333333?text=Gen+AI';"
-                         alt="Gen AI Badge" class="w-16 h-16 mr-4 flex-shrink-0">
+                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <img src="images/image2.png" alt="Gen AI Badge" class="w-16 h-16 mr-4">
                     <div>
                         <h3 class="text-lg font-semibold text-blue-900">Generative AI Overview for Project Managers</h3>
                         <p class="text-gray-700">Accredited Provider</p>
@@ -330,26 +274,27 @@
         </div>
     </section>
 
-    <!-- Contact Section: Call to Action for Engagement -->
-    <section id="contact" class="py-16 bg-white shadow-inner">
+    <!-- Contact Section -->
+    <section id="contact" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6 border-b-2 border-blue-600 pb-2">Contact Me</h2>
-            <p class="text-lg text-gray-700 mb-8 leading-relaxed">
-                Let’s work together to enhance your Agile team performance! Connect with me on Upwork to discuss your project needs. I'm eager to bring my expertise to your next challenge.
-            </p>
-            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" 
-               class="bg-blue-900 text-white px-8 py-4 rounded-full font-semibold text-xl 
-                      hover:bg-blue-800 transform hover:scale-105 transition duration-300 ease-in-out shadow-lg">
-                Connect on Upwork
-            </a>
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Contact Me</h2>
+            <p class="text-lg text-gray-700 mb-6">Let’s work together to enhance your Agile team performance! Connect with me on Upwork to discuss your project needs.</p>
+            <a href="https://www.upwork.com/freelancers/~01daef5603f19d2620" target="_blank" class="bg-blue-900 text-white px-6 py-3 rounded-md font-semibold hover:bg-blue-800">Connect on Upwork</a>
         </div>
     </section>
 
-    <!-- Footer: Copyright Information -->
-    <footer class="bg-blue-900 text-white py-6 text-center shadow-inner">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <p class="text-sm">&copy; 2025 Devendrappa. All rights reserved.</p>
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Devendrappa. All rights reserved.</p>
         </div>
     </footer>
+
+    <script>
+        function toggleCaseStudy(id) {
+            const content = document.getElementById(id);
+            content.style.display = (content.style.display === "block") ? "none" : "block";
+        }
+    </script>
 </body>
 </html>

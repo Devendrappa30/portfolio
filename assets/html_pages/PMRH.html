@@ -6,7 +6,7 @@
   <title>Project Management Resources Hub</title>
   <style>
     body {
-      font-family: 'Inter', Arial, sans-serif; /* Using Inter for a modern look */
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 20px;
       background-color: #E6F0FA; /* Light blue background */
@@ -20,16 +20,14 @@
       max-width: 1200px;
       background-color: #FFFFFF; /* White container */
       padding: 30px;
-      border-radius: 12px; /* Slightly more rounded */
-      box-shadow: 0 6px 12px rgba(30, 58, 138, 0.15); /* More prominent blue-tinted shadow */
-      margin-bottom: 20px; /* Space above copyright */
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(30, 58, 138, 0.1); /* Blue-tinted shadow */
     }
     h1 {
       font-size: 2.5em;
       color: #1E3A8A; /* Dark blue */
       text-align: center;
       margin-bottom: 10px;
-      font-weight: 700; /* Bold title */
     }
     .subtitle {
       font-size: 1.2em;
@@ -38,16 +36,15 @@
       margin-bottom: 30px;
     }
     h2 {
-      font-size: 1.5em; /* Slightly larger heading */
+      font-size: 1.3em;
       color: #3B82F6; /* Medium blue */
-      margin: 20px 0 15px;
-      font-weight: 600; /* Semi-bold */
+      margin: 20px 0 10px;
     }
     .section-toggle {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 12px; /* Slightly more space */
+      gap: 10px;
       margin-bottom: 30px;
     }
     .section-toggle button {
@@ -56,19 +53,15 @@
       background-color: #2563EB; /* Blue */
       color: #FFFFFF; /* White text */
       border: none;
-      border-radius: 8px; /* Rounded buttons */
+      border-radius: 5px;
       cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.2s ease; /* Add transform for subtle click effect */
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s ease;
     }
     .section-toggle button:hover:not(.active) {
       background-color: #FBBF24; /* Yellow hover */
-      transform: translateY(-2px); /* Lift effect on hover */
     }
     .section-toggle button.active {
       background-color: #F59E0B; /* Darker yellow active */
-      box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); /* Active shadow */
-      transform: translateY(0);
     }
     .section-container {
       display: flex;
@@ -81,10 +74,9 @@
       flex: 1 1 100%;
       min-width: 0;
       border: 1px solid #FBBF24; /* Yellow border */
-      border-radius: 8px; /* Rounded section */
-      padding: 20px; /* More padding */
+      border-radius: 5px;
+      padding: 15px;
       background-color: #FFFFFF; /* White background */
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Soft shadow for sections */
     }
     .section.active {
       display: block;
@@ -93,72 +85,48 @@
       font-size: 1em;
       color: #4B5563; /* Dark gray */
       margin-bottom: 15px;
-      line-height: 1.6; /* Better readability */
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px; /* More space above table */
-      border-radius: 8px; /* Rounded table corners */
-      overflow: hidden; /* Ensures rounded corners are visible for content */
+      margin-top: 10px;
     }
     th {
       background-color: #2563EB; /* Blue header */
       color: #FFFFFF; /* White text */
-      padding: 12px 15px; /* More padding */
+      padding: 10px;
       text-align: left;
-      font-size: 0.95em;
-      font-weight: 600; /* Semi-bold header */
+      font-size: 0.9em;
     }
     td {
       border: 1px solid #FBBF24; /* Yellow border */
-      padding: 12px 15px;
+      padding: 10px;
       font-size: 0.9em;
       color: #4B5563; /* Dark gray */
-    }
-    tr:nth-child(even) { /* Zebra striping for rows */
-      background-color: #F8F9FA;
     }
     .document-link {
       color: #1D4ED8; /* Blue link */
       text-decoration: none;
       transition: color 0.3s ease;
-      font-weight: 500; /* Medium weight for links */
     }
     .document-link:hover {
       color: #B45309; /* Darker yellow-orange hover */
-      text-decoration: underline; /* Underline on hover */
     }
     .copyright {
       font-size: 0.9em;
       color: #1E3A8A; /* Dark blue */
       text-align: center;
       margin-top: 30px;
-      padding-top: 15px; /* More padding */
+      padding-top: 10px;
       border-top: 1px solid #FBBF24; /* Yellow separator */
     }
     @media (max-width: 768px) {
-      .container {
-        padding: 20px;
-      }
-      h1 {
-        font-size: 2em;
-      }
-      .subtitle {
-        font-size: 1em;
-      }
-      .section-toggle {
-        flex-direction: column; /* Stack buttons on small screens */
-        gap: 8px;
+      .section-container {
+        flex-direction: column;
       }
       .section-toggle button {
         padding: 10px 18px;
         font-size: 0.9em;
-        width: 100%; /* Full width buttons */
-      }
-      table, th, td {
-        font-size: 0.85em; /* Smaller text for tables */
-        padding: 8px 10px;
       }
     }
   </style>
@@ -187,13 +155,30 @@
         <table>
           <thead>
             <tr>
-              <th>IT Support Service Level Agreement (SLA)</th>
-              <th>'One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.'</th>
-              <th>assets/html_pages/Support SLA.html</th>
+              <th>Document Title</th>
+              <th>Description</th>
+              <th>Link</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>IT Support Service Level Agreement (SLA)</td>
+              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
+              <!-- IMPORTANT: Replace 'documents/IT_Support_SLA.pdf' with your actual file path/URL -->
+              <td><a href="documents/IT_Support_SLA.pdf" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Quarterly Review Meeting</td>
+              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
+              <!-- IMPORTANT: Replace 'documents/Quarterly_Review_Meeting.pptx' with your actual file path/URL -->
+              <td><a href="documents/Quarterly_Review_Meeting.pptx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Project Initiation Document</td>
+              <td>Formal document authorizing the project, defining objectives, stakeholders, and initial scope.</td>
+              <!-- IMPORTANT: Replace 'documents/Project_Initiation_Document.docx' with your actual file path/URL -->
+              <td><a href="documents/Project_Initiation_Document.docx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -211,7 +196,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>Stakeholder Communication Plan</td>
+              <td>Strategy for engaging and communicating with all project stakeholders, including frequency and methods.</td>
+              <!-- IMPORTANT: Replace 'documents/Communication_Plan.xlsx' with your actual file path/URL -->
+              <td><a href="documents/Communication_Plan.xlsx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Weekly Project Status Report</td>
+              <td>Regular updates on project progress, accomplishments, upcoming tasks, and any identified risks or issues.</td>
+              <!-- IMPORTANT: Replace 'documents/Weekly_Status_Report.html' with your actual file path/URL -->
+              <td><a href="documents/Weekly_Status_Report.html" class="document-link">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -229,7 +225,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>Team Roles and Responsibilities Matrix</td>
+              <td>Clearly defined roles, responsibilities, and expected contributions for each team member.</td>
+              <!-- IMPORTANT: Replace 'documents/Team_Matrix.pdf' with your actual file path/URL -->
+              <td><a href="documents/Team_Matrix.pdf" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Performance Review Guidelines</td>
+              <td>Documentation outlining the process and criteria for conducting team member performance reviews.</td>
+              <!-- IMPORTANT: Replace 'documents/Performance_Guidelines.docx' with your actual file path/URL -->
+              <td><a href="documents/Performance_Guidelines.docx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -247,7 +254,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>System Architecture Diagram</td>
+              <td>Visual representation of the project's technical infrastructure and component interactions.</td>
+              <!-- IMPORTANT: Replace 'documents/Architecture_Diagram.pdf' with your actual file path/URL -->
+              <td><a href="documents/Architecture_Diagram.pdf" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>API Integration Guide</td>
+              <td>Detailed documentation for integrating with external APIs, including endpoints, parameters, and examples.</td>
+              <!-- IMPORTANT: Replace 'documents/API_Integration_Guide.html' with your actual file path/URL -->
+              <td><a href="documents/API_Integration_Guide.html" class="document-link">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -265,7 +283,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>Data Privacy Policy</td>
+              <td>Guidelines and procedures for handling sensitive data in compliance with relevant regulations.</td>
+              <!-- IMPORTANT: Replace 'documents/Data_Privacy_Policy.pdf' with your actual file path/URL -->
+              <td><a href="documents/Data_Privacy_Policy.pdf" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Audit Report 2024</td>
+              <td>Summary of findings and recommendations from the annual project audit.</td>
+              <!-- IMPORTANT: Replace 'documents/Audit_Report_2024.xlsx' with your actual file path/URL -->
+              <td><a href="documents/Audit_Report_2024.xlsx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -283,7 +312,18 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Document rows will be dynamically inserted here -->
+            <tr>
+              <td>Project Closure Report</td>
+              <td>Comprehensive report detailing project outcome, successes, challenges, and final status.</td>
+              <!-- IMPORTANT: Replace 'documents/Project_Closure_Report.docx' with your actual file path/URL -->
+              <td><a href="documents/Project_Closure_Report.docx" class="document-link" target="_blank">View Document</a></td>
+            </tr>
+            <tr>
+              <td>Handover Checklist</td>
+              <td>A checklist of all items to be transferred to the operational team upon project completion.</td>
+              <!-- IMPORTANT: Replace 'documents/Handover_Checklist.pdf' with your actual file path/URL -->
+              <td><a href="documents/Handover_Checklist.pdf" class="document-link" target="_blank">View Document</a></td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -293,148 +333,21 @@
   </div>
 
   <script>
-    // Define all your documents here
-    // You can modify this array to add, remove, or change document links and details.
-    const allDocuments = [
-      // --- Project Documents ---
-      {
-        section: 'project-documents',
-        title: 'IT Support Service Level Agreement (SLA)',
-        description: 'One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.',
-        link: 'assets/html_pages/Support SLA.html' // Example: Link to a PDF in a 'documents' folder
-      },
-      {
-        section: 'project-documents',
-        title: 'Quarterly Review Meeting Q1 2025',
-        description: 'Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.',
-        link: 'documents/Q1_Review_Presentation.pptx' // Example: Link to a PowerPoint file
-      },
-      {
-        section: 'project-documents',
-        title: 'Project Charter - Phase 1',
-        description: 'Defines the project scope, objectives, stakeholders, and high-level plan for Phase 1.',
-        link: 'https://www.example.com/project_charter_v1.docx' // Example: Link to an external online document
-      },
-      // --- Communication ---
-      {
-        section: 'communication',
-        title: 'Project Kick-off Meeting Notes',
-        description: 'Key discussions, decisions, and action items from the initial project kick-off meeting, May 15, 2025.',
-        link: 'documents/Kickoff_Meeting_Notes.pdf'
-      },
-      {
-        section: 'communication',
-        title: 'Weekly Status Report Template',
-        description: 'Standard template for submitting weekly project status reports.',
-        link: 'documents/Weekly_Status_Report_Template.xlsx'
-      },
-      // --- Team Management ---
-      {
-        section: 'team-management',
-        title: 'Team Roles & Responsibilities Matrix',
-        description: 'Detailed breakdown of roles, responsibilities, and key contacts for the project team.',
-        link: 'documents/Team_Matrix.pdf'
-      },
-      {
-        section: 'team-management',
-        title: 'Performance Review Guidelines',
-        description: 'Guidelines and forms for conducting team member performance reviews.',
-        link: 'documents/Performance_Review_Guidelines.docx'
-      },
-      // --- Technical Docs ---
-      {
-        section: 'technical-docs',
-        title: 'System Architecture Diagram',
-        description: 'High-level overview of the system architecture, components, and data flow.',
-        link: 'documents/System_Architecture.png'
-      },
-      {
-        section: 'technical-docs',
-        title: 'API Integration Specification',
-        description: 'Technical specifications for integrating with third-party APIs, including endpoints and data formats.',
-        link: 'documents/API_Spec.pdf'
-      },
-      // --- Governance & Compliance ---
-      {
-        section: 'governance-compliance',
-        title: 'Data Privacy Policy',
-        description: 'Company policy regarding data collection, storage, and privacy compliance (GDPR, CCPA).',
-        link: 'documents/Data_Privacy_Policy.pdf'
-      },
-      {
-        section: 'governance-compliance',
-        title: 'Risk Management Plan',
-        description: 'Plan outlining procedures for identifying, assessing, and mitigating project risks.',
-        link: 'documents/Risk_Management_Plan.docx'
-      },
-      // --- Closure & Handover ---
-      {
-        section: 'closure-handover',
-        title: 'Project Closure Report',
-        description: 'Final report summarizing project outcomes, budget, schedule, and lessons learned.',
-        link: 'documents/Project_Closure_Report.pdf'
-      },
-      {
-        section: 'closure-handover',
-        title: 'Handover Checklist',
-        description: 'Checklist to ensure all necessary documentation and knowledge are transferred during project handover.',
-        link: 'documents/Handover_Checklist.xlsx'
-      }
-    ];
+    // Note: The gk_isXlsx, gk_xlsxFileLookup, gk_fileData, filledCell, and loadFileData
+    // functions were part of the original HTML but are not directly used by the updated
+    // <a> tags for linking external documents. If you intend to implement in-browser
+    // viewing for XLSX files using a library like SheetJS, you would need to
+    // integrate those functions with the actual click events or content loading logic.
+    // For simple linking, these can remain but are not active.
 
-    /**
-     * Populates the table for a given section with documents.
-     * @param {string} sectionId The ID of the section (e.g., 'project-documents').
-     */
-    function populateTable(sectionId) {
-      const sectionElement = document.getElementById(sectionId);
-      const tbody = sectionElement.querySelector('tbody');
-      tbody.innerHTML = ''; // Clear existing rows
-
-      const filteredDocuments = allDocuments.filter(doc => doc.section === sectionId);
-
-      if (filteredDocuments.length === 0) {
-        // Display a message if no documents are found for the section
-        const noDocsRow = document.createElement('tr');
-        noDocsRow.innerHTML = `<td colspan="3" style="text-align: center; font-style: italic; color: #6B7280;">No documents available for this section yet.</td>`;
-        tbody.appendChild(noDocsRow);
-        return;
-      }
-
-      filteredDocuments.forEach(doc => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${doc.title}</td>
-          <td>${doc.description}</td>
-          <td><a href="${doc.link}" class="document-link" target="_blank" rel="noopener noreferrer">View Document</a></td>
-        `;
-        tbody.appendChild(row);
-      });
-    }
-
-    /**
-     * Shows a specific section and populates its table.
-     * @param {string} sectionId The ID of the section to show.
-     */
     function showSection(sectionId) {
-      // Deactivate all sections and buttons
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.querySelectorAll('.section-btn').forEach(btn => btn.classList.remove('active'));
 
-      // Activate the selected section and button
-      const activeSection = document.getElementById(sectionId);
-      const activeButton = document.querySelector(`button[onclick="showSection('${sectionId}')"]`);
-
-      if (activeSection && activeButton) {
-        activeSection.classList.add('active');
-        activeButton.classList.add('active');
-        populateTable(sectionId); // Populate the table for the active section
-      }
+      document.getElementById(sectionId).classList.add('active');
+      document.querySelector(`button[onclick="showSection('${sectionId}')"]`).classList.add('active');
     }
 
-    /**
-     * Handles query parameters from the URL to show a specific section on load.
-     */
     function handleQueryParams() {
       const params = new URLSearchParams(window.location.search);
       const section = params.get('section');
@@ -449,24 +362,19 @@
       if (section && validSections.includes(section)) {
         showSection(section);
       } else {
-        // Default to 'project-documents' if no valid section is specified
         showSection('project-documents');
       }
     }
 
-    // Initialize on window load
     window.onload = handleQueryParams;
 
-    // Add keyboard navigation for section buttons (Enter/Space)
     document.querySelectorAll('.section-btn').forEach(button => {
       button.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault(); // Prevent default action (e.g., scrolling)
+          e.preventDefault();
           const onclick = button.getAttribute('onclick');
-          const match = onclick.match(/'([^']+)'/); // Extract sectionId from onclick attribute
-          if (match && match[1]) {
-            showSection(match[1]);
-          }
+          const match = onclick.match(/'([^']+)'/)[1];
+          showSection(match);
         }
       });
     });

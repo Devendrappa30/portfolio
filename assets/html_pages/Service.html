@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devendrappa - Service Offerings</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+        /* Resources Dropdown Custom Styles */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 30;
+            margin-top: 0.5rem;
+            border-radius: 0.375rem;
+        }
+        .dropdown-content a {
+            color: #1e3a8a;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            display: block;
+            border-radius: 0.375rem;
+        }
+        .dropdown-content a:hover {
+            background-color: #dbeafe;
+        }
+        .dropdown:hover .dropdown-content,
+        .dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+        .dropdown-btn:after {
+            content: '';
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            margin-left: 6px;
+            transform: rotate(45deg);
+            -webkit-transform: rotate(45deg);
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans smooth-scroll">
+    <nav class="bg-blue-900 text-white sticky top-0 z-10 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex items-center">
+                    <h1 class="text-xl font-bold">Devendrappa - Agile Practitioner</h1>
+                </div>
+                <div class="hidden md:flex items-center space-x-2">
+                    <a href="index.html#about" class="hover:bg-blue-700 px-2 py-2 rounded-md">About</a>
+                    <a href="index.html#skills" class="hover:bg-blue-700 px-2 py-2 rounded-md">Skills</a>
+                    <a href="index.html#case-studies" class="hover:bg-blue-700 px-2 py-2 rounded-md">Case Studies</a>
+                    <a href="index.html#certifications" class="hover:bg-blue-700 px-2 py-2 rounded-md">Certifications</a>
+                    <div class="dropdown relative">
+                        <button class="dropdown-btn hover:bg-blue-700 px-2 py-2 rounded-md focus:outline-none flex items-center">
+                            Resources
+                        </button>
+                        <div class="dropdown-content absolute right-0 mt-2 shadow-lg">
+                            <a href="MRDH.html">Metrics and Dashboard</a>
+                            <a href="PMRH.html">Project Resource</a>
+                        </div>
+                    </div>
+                    <a href="index.html#contact" class="hover:bg-blue-700 px-2 py-2 rounded-md">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-button" class="text-white hover:bg-blue-700 p-2 rounded-md focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <section id="service-offerings" class="py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8">Service Offerings</h2>
+            <p class="text-lg text-gray-700 mb-8">Comprehensive project management services tailored to your needs using Waterfall, Agile, and XP methodologies.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="bg-blue-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-blue-900 mb-4">Waterfall Project Management</h3>
+                    <ul class="text-gray-700 list-disc list-inside space-y-2">
+                        <li>Structured project planning with clear phases (Requirements, Design, Implementation, Testing, Deployment).</li>
+                        <li>Detailed Gantt charts and milestone tracking.</li>
+                        <li>Risk management and stakeholder communication.</li>
+                        <li>Ideal for projects with fixed requirements and regulatory compliance needs.</li>
+                    </ul>
+                </div>
+                <div class="bg-green-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-green-800 mb-4">Agile Project Management</h3>
+                    <ul class="text-gray-700 list-disc list-inside space-y-2">
+                        <li>Iterative delivery with sprints and continuous feedback.</li>
+                        <li>Facilitation of Scrum ceremonies (Daily Standups, Sprint Planning, Retrospectives).</li>
+                        <li>Tracking KPIs like Velocity, Cycle Time, and Burndown Charts.</li>
+                        <li>Suitable for dynamic software development projects.</li>
+                    </ul>
+                </div>
+                <div class="bg-purple-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-purple-800 mb-4">Extreme Programming (XP)</h3>
+                    <ul class="text-gray-700 list-disc list-inside space-y-2">
+                        <li>Emphasis on technical excellence with practices like Pair Programming, TDD, and Continuous Integration.</li>
+                        <li>Rapid delivery of small, functional increments.</li>
+                        <li>Code quality metrics and defect management.</li>
+                        <li>Best for high-change, developer-driven projects.</li>
+                    </ul>
+                </div>
+                <div class="bg-yellow-100 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-yellow-800 mb-4">Support Project Management</h3>
+                    <ul class="text-gray-700 list-disc list-inside space-y-2">
+                        <li>Management of IT support and maintenance projects.</li>
+                        <li>Incident tracking, SLA monitoring, and resolution time analysis.</li>
+                        <li>Coordination of support teams and escalation processes.</li>
+                        <li>Ensuring system uptime and client satisfaction.</li>
+                    </ul>
+                </div>
+                <div class="bg-gray-200 p-6 rounded-lg shadow-md">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4">Additional Services</h3>
+                    <ul class="text-gray-700 list-disc list-inside space-y-2">
+                        <li>Custom dashboard setup (Jira, Azure DevOps, Asana).</li>
+                        <li>Process optimization and team training.</li>
+                        <li>Stakeholder reporting and documentation (Confluence).</li>
+                        <li>Risk and change management across methodologies.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-blue-900 text-white py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 Devendrappa. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // No specific script for this page, but keeping consistent structure
+    </script>
+</body>
+</html>

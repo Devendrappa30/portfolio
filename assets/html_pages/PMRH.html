@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -45,7 +6,7 @@
   <title>Project Management Resources Hub</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', Arial, sans-serif; /* Using Inter for a modern look */
       margin: 0;
       padding: 20px;
       background-color: #E6F0FA; /* Light blue background */
@@ -59,14 +20,16 @@
       max-width: 1200px;
       background-color: #FFFFFF; /* White container */
       padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(30, 58, 138, 0.1); /* Blue-tinted shadow */
+      border-radius: 12px; /* Slightly more rounded */
+      box-shadow: 0 6px 12px rgba(30, 58, 138, 0.15); /* More prominent blue-tinted shadow */
+      margin-bottom: 20px; /* Space above copyright */
     }
     h1 {
       font-size: 2.5em;
       color: #1E3A8A; /* Dark blue */
       text-align: center;
       margin-bottom: 10px;
+      font-weight: 700; /* Bold title */
     }
     .subtitle {
       font-size: 1.2em;
@@ -75,15 +38,16 @@
       margin-bottom: 30px;
     }
     h2 {
-      font-size: 1.3em;
+      font-size: 1.5em; /* Slightly larger heading */
       color: #3B82F6; /* Medium blue */
-      margin: 20px 0 10px;
+      margin: 20px 0 15px;
+      font-weight: 600; /* Semi-bold */
     }
     .section-toggle {
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 12px; /* Slightly more space */
       margin-bottom: 30px;
     }
     .section-toggle button {
@@ -92,15 +56,19 @@
       background-color: #2563EB; /* Blue */
       color: #FFFFFF; /* White text */
       border: none;
-      border-radius: 5px;
+      border-radius: 8px; /* Rounded buttons */
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: background-color 0.3s ease, transform 0.2s ease; /* Add transform for subtle click effect */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
     .section-toggle button:hover:not(.active) {
       background-color: #FBBF24; /* Yellow hover */
+      transform: translateY(-2px); /* Lift effect on hover */
     }
     .section-toggle button.active {
       background-color: #F59E0B; /* Darker yellow active */
+      box-shadow: 0 3px 6px rgba(245, 158, 11, 0.3); /* Active shadow */
+      transform: translateY(0);
     }
     .section-container {
       display: flex;
@@ -113,9 +81,10 @@
       flex: 1 1 100%;
       min-width: 0;
       border: 1px solid #FBBF24; /* Yellow border */
-      border-radius: 5px;
-      padding: 15px;
+      border-radius: 8px; /* Rounded section */
+      padding: 20px; /* More padding */
       background-color: #FFFFFF; /* White background */
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05); /* Soft shadow for sections */
     }
     .section.active {
       display: block;
@@ -124,48 +93,72 @@
       font-size: 1em;
       color: #4B5563; /* Dark gray */
       margin-bottom: 15px;
+      line-height: 1.6; /* Better readability */
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
+      margin-top: 20px; /* More space above table */
+      border-radius: 8px; /* Rounded table corners */
+      overflow: hidden; /* Ensures rounded corners are visible for content */
     }
     th {
       background-color: #2563EB; /* Blue header */
       color: #FFFFFF; /* White text */
-      padding: 10px;
+      padding: 12px 15px; /* More padding */
       text-align: left;
-      font-size: 0.9em;
+      font-size: 0.95em;
+      font-weight: 600; /* Semi-bold header */
     }
     td {
       border: 1px solid #FBBF24; /* Yellow border */
-      padding: 10px;
+      padding: 12px 15px;
       font-size: 0.9em;
       color: #4B5563; /* Dark gray */
+    }
+    tr:nth-child(even) { /* Zebra striping for rows */
+      background-color: #F8F9FA;
     }
     .document-link {
       color: #1D4ED8; /* Blue link */
       text-decoration: none;
       transition: color 0.3s ease;
+      font-weight: 500; /* Medium weight for links */
     }
     .document-link:hover {
       color: #B45309; /* Darker yellow-orange hover */
+      text-decoration: underline; /* Underline on hover */
     }
     .copyright {
       font-size: 0.9em;
       color: #1E3A8A; /* Dark blue */
       text-align: center;
       margin-top: 30px;
-      padding-top: 10px;
+      padding-top: 15px; /* More padding */
       border-top: 1px solid #FBBF24; /* Yellow separator */
     }
     @media (max-width: 768px) {
-      .section-container {
-        flex-direction: column;
+      .container {
+        padding: 20px;
+      }
+      h1 {
+        font-size: 2em;
+      }
+      .subtitle {
+        font-size: 1em;
+      }
+      .section-toggle {
+        flex-direction: column; /* Stack buttons on small screens */
+        gap: 8px;
       }
       .section-toggle button {
         padding: 10px 18px;
         font-size: 0.9em;
+        width: 100%; /* Full width buttons */
+      }
+      table, th, td {
+        font-size: 0.85em; /* Smaller text for tables */
+        padding: 8px 10px;
       }
     }
   </style>
@@ -175,6 +168,7 @@
     <h1>Project Management Resources Hub</h1>
     <p class="subtitle">Essential Documents for Effective Oversight</p>
 
+    <!-- Section Toggle Buttons -->
     <div class="section-toggle" role="tablist">
       <button class="section-btn active" onclick="showSection('project-documents')" role="tab" aria-label="Switch to Project Documents section">Project Documents</button>
       <button class="section-btn" onclick="showSection('communication')" role="tab" aria-label="Switch to Communication section">Communication</button>
@@ -184,7 +178,9 @@
       <button class="section-btn" onclick="showSection('closure-handover')" role="tab" aria-label="Switch to Closure & Handover section">Closure & Handover</button>
     </div>
 
+    <!-- Section Container -->
     <div class="section-container">
+      <!-- Project Documents Section -->
       <div id="project-documents" class="section active" role="tabpanel">
         <h2>Project Documents</h2>
         <p class="section-description">Core project-related documents, including plans, schedules, and progress reports.</p>
@@ -197,20 +193,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="assets/html_pages/Support SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>Quarterly Review Meeting</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Quarterly%20Review%20Meeting.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
 
+      <!-- Communication Section -->
       <div id="communication" class="section" role="tabpanel">
         <h2>Communication</h2>
         <p class="section-description">Documents related to stakeholder updates, meeting notes, and communication plans.</p>
@@ -223,20 +211,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Support%20SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>FY 2025 Salesforce Q1 Review</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/FY%202025%20Salesforce%20Q1%20Review.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
 
+      <!-- Team Management Section -->
       <div id="team-management" class="section" role="tabpanel">
         <h2>Team Management</h2>
         <p class="section-description">Resources for team assignments, roles, responsibilities, and performance reviews.</p>
@@ -249,20 +229,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Support%20SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>FY 2025 Salesforce Q1 Review</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/FY%202025%20Salesforce%20Q1%20Review.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
 
+      <!-- Technical Docs Section -->
       <div id="technical-docs" class="section" role="tabpanel">
         <h2>Technical Docs</h2>
         <p class="section-description">Technical specifications, system configurations, and integration details.</p>
@@ -275,20 +247,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Support%20SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>FY 2025 Salesforce Q1 Review</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/FY%202025%20Salesforce%20Q1%20Review.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
 
+      <!-- Governance & Compliance Section -->
       <div id="governance-compliance" class="section" role="tabpanel">
         <h2>Governance & Compliance</h2>
         <p class="section-description">Policies, compliance reports, and audit documentation.</p>
@@ -301,20 +265,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Support%20SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>Quarterly Review Meeting</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Quarterly%20Review%20Meeting.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
 
+      <!-- Closure & Handover Section -->
       <div id="closure-handover" class="section" role="tabpanel">
         <h2>Closure & Handover</h2>
         <p class="section-description">Project closure reports, handover checklists, and lessons learned.</p>
@@ -327,16 +283,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>IT Support Service Level Agreement (SLA)</td>
-              <td>One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/Support%20SLA.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
-            <tr>
-              <td>FY 2025 Salesforce Q1 Review</td>
-              <td>Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.</td>
-              <td><a href="https://raw.githubusercontent.com/your-github-username/your-repo-name/main/FY%202025%20Salesforce%20Q1%20Review.html" class="document-link" target="_blank">View Document</a></td>
-            </tr>
+            <!-- Document rows will be dynamically inserted here -->
           </tbody>
         </table>
       </div>
@@ -346,14 +293,148 @@
   </div>
 
   <script>
+    // Define all your documents here
+    // You can modify this array to add, remove, or change document links and details.
+    const allDocuments = [
+      // --- Project Documents ---
+      {
+        section: 'project-documents',
+        title: 'IT Support Service Level Agreement (SLA)',
+        description: 'One-year Salesforce support service overview, including support levels, activities, SLA matrix, and escalation process. Prepared for: Client, May 30, 2025.',
+        link: 'documents/IT_Support_SLA.pdf' // Example: Link to a PDF in a 'documents' folder
+      },
+      {
+        section: 'project-documents',
+        title: 'Quarterly Review Meeting Q1 2025',
+        description: 'Q1 progress and action plan, covering projects, support, financials, risks, and roadmap. Presented by: Devendrappa, IT Project Manager, May 2025.',
+        link: 'documents/Q1_Review_Presentation.pptx' // Example: Link to a PowerPoint file
+      },
+      {
+        section: 'project-documents',
+        title: 'Project Charter - Phase 1',
+        description: 'Defines the project scope, objectives, stakeholders, and high-level plan for Phase 1.',
+        link: 'https://www.example.com/project_charter_v1.docx' // Example: Link to an external online document
+      },
+      // --- Communication ---
+      {
+        section: 'communication',
+        title: 'Project Kick-off Meeting Notes',
+        description: 'Key discussions, decisions, and action items from the initial project kick-off meeting, May 15, 2025.',
+        link: 'documents/Kickoff_Meeting_Notes.pdf'
+      },
+      {
+        section: 'communication',
+        title: 'Weekly Status Report Template',
+        description: 'Standard template for submitting weekly project status reports.',
+        link: 'documents/Weekly_Status_Report_Template.xlsx'
+      },
+      // --- Team Management ---
+      {
+        section: 'team-management',
+        title: 'Team Roles & Responsibilities Matrix',
+        description: 'Detailed breakdown of roles, responsibilities, and key contacts for the project team.',
+        link: 'documents/Team_Matrix.pdf'
+      },
+      {
+        section: 'team-management',
+        title: 'Performance Review Guidelines',
+        description: 'Guidelines and forms for conducting team member performance reviews.',
+        link: 'documents/Performance_Review_Guidelines.docx'
+      },
+      // --- Technical Docs ---
+      {
+        section: 'technical-docs',
+        title: 'System Architecture Diagram',
+        description: 'High-level overview of the system architecture, components, and data flow.',
+        link: 'documents/System_Architecture.png'
+      },
+      {
+        section: 'technical-docs',
+        title: 'API Integration Specification',
+        description: 'Technical specifications for integrating with third-party APIs, including endpoints and data formats.',
+        link: 'documents/API_Spec.pdf'
+      },
+      // --- Governance & Compliance ---
+      {
+        section: 'governance-compliance',
+        title: 'Data Privacy Policy',
+        description: 'Company policy regarding data collection, storage, and privacy compliance (GDPR, CCPA).',
+        link: 'documents/Data_Privacy_Policy.pdf'
+      },
+      {
+        section: 'governance-compliance',
+        title: 'Risk Management Plan',
+        description: 'Plan outlining procedures for identifying, assessing, and mitigating project risks.',
+        link: 'documents/Risk_Management_Plan.docx'
+      },
+      // --- Closure & Handover ---
+      {
+        section: 'closure-handover',
+        title: 'Project Closure Report',
+        description: 'Final report summarizing project outcomes, budget, schedule, and lessons learned.',
+        link: 'documents/Project_Closure_Report.pdf'
+      },
+      {
+        section: 'closure-handover',
+        title: 'Handover Checklist',
+        description: 'Checklist to ensure all necessary documentation and knowledge are transferred during project handover.',
+        link: 'documents/Handover_Checklist.xlsx'
+      }
+    ];
+
+    /**
+     * Populates the table for a given section with documents.
+     * @param {string} sectionId The ID of the section (e.g., 'project-documents').
+     */
+    function populateTable(sectionId) {
+      const sectionElement = document.getElementById(sectionId);
+      const tbody = sectionElement.querySelector('tbody');
+      tbody.innerHTML = ''; // Clear existing rows
+
+      const filteredDocuments = allDocuments.filter(doc => doc.section === sectionId);
+
+      if (filteredDocuments.length === 0) {
+        // Display a message if no documents are found for the section
+        const noDocsRow = document.createElement('tr');
+        noDocsRow.innerHTML = `<td colspan="3" style="text-align: center; font-style: italic; color: #6B7280;">No documents available for this section yet.</td>`;
+        tbody.appendChild(noDocsRow);
+        return;
+      }
+
+      filteredDocuments.forEach(doc => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${doc.title}</td>
+          <td>${doc.description}</td>
+          <td><a href="${doc.link}" class="document-link" target="_blank" rel="noopener noreferrer">View Document</a></td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    /**
+     * Shows a specific section and populates its table.
+     * @param {string} sectionId The ID of the section to show.
+     */
     function showSection(sectionId) {
+      // Deactivate all sections and buttons
       document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
       document.querySelectorAll('.section-btn').forEach(btn => btn.classList.remove('active'));
 
-      document.getElementById(sectionId).classList.add('active');
-      document.querySelector(`button[onclick="showSection('${sectionId}')"]`).classList.add('active');
+      // Activate the selected section and button
+      const activeSection = document.getElementById(sectionId);
+      const activeButton = document.querySelector(`button[onclick="showSection('${sectionId}')"]`);
+
+      if (activeSection && activeButton) {
+        activeSection.classList.add('active');
+        activeButton.classList.add('active');
+        populateTable(sectionId); // Populate the table for the active section
+      }
     }
 
+    /**
+     * Handles query parameters from the URL to show a specific section on load.
+     */
     function handleQueryParams() {
       const params = new URLSearchParams(window.location.search);
       const section = params.get('section');
@@ -368,19 +449,24 @@
       if (section && validSections.includes(section)) {
         showSection(section);
       } else {
+        // Default to 'project-documents' if no valid section is specified
         showSection('project-documents');
       }
     }
 
+    // Initialize on window load
     window.onload = handleQueryParams;
 
+    // Add keyboard navigation for section buttons (Enter/Space)
     document.querySelectorAll('.section-btn').forEach(button => {
       button.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
+          e.preventDefault(); // Prevent default action (e.g., scrolling)
           const onclick = button.getAttribute('onclick');
-          const match = onclick.match(/'([^']+)'/)[1];
-          showSection(match);
+          const match = onclick.match(/'([^']+)'/); // Extract sectionId from onclick attribute
+          if (match && match[1]) {
+            showSection(match[1]);
+          }
         }
       });
     });

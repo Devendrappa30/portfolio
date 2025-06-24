@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Canada Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6; /* Light gray background */
+        }
+        .section-title {
+            @apply text-3xl font-bold text-gray-800 mb-6 border-b-2 border-blue-500 pb-2;
+        }
+        .card {
+            @apply bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300;
+        }
+        .media-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem; /* Rounded corners */
+        }
+        .media-container iframe,
+        .media-container video,
+        .media-container audio {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-700">
+
+    <!-- Header Section -->
+    <header class="bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-6 shadow-lg">
+        <div class="container mx-auto flex flex-col md:flex-row items-center justify-between">
+            <h1 class="text-4xl font-extrabold mb-4 md:mb-0">My Canada Hub 🇨🇦</h1>
+            <nav>
+                <ul class="flex flex-wrap gap-4 text-lg font-medium">
+                    <li><a href="#news" class="hover:text-blue-200 transition-colors duration-200">News</a></li>
+                    <li><a href="#immigration" class="hover:text-blue-200 transition-colors duration-200">Immigration</a></li>
+                    <li><a href="#events" class="hover:text-blue-200 transition-colors duration-200">Events</a></li>
+                    <li><a href="#multimedia" class="hover:text-blue-200 transition-colors duration-200">Multimedia</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8">
+
+        <!-- Canada News Section -->
+        <section id="news" class="mb-12">
+            <h2 class="section-title">Latest Canadian News</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- News Article 1 -->
+                <div class="card">
+                    <img src="https://placehold.co/600x400/D1FAE5/065F46?text=Parliament+Hill" alt="Parliament Hill" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Government Unveils New Climate Initiative</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 21, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">The Canadian government today announced a comprehensive plan to boost renewable energy and reduce carbon emissions by 2030...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </div>
+                <!-- News Article 2 -->
+                <div class="card">
+                    <img src="https://placehold.co/600x400/FEE2E2/991B1B?text=Economy+Graph" alt="Economy Graph" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Inflation Rate Sees Slight Decrease</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 20, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Statistics Canada reported a marginal drop in the national inflation rate for May, offering a glimmer of hope for consumers...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </div>
+                <!-- News Article 3 -->
+                <div class="card">
+                    <img src="https://placehold.co/600x400/DBEAFE/1E40AF?text=Healthcare+Canada" alt="Healthcare Canada" class="w-full h-48 object-cover rounded-md mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Improvements to Healthcare Access Announced</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 19, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Provinces and the federal government are collaborating on new measures to reduce wait times and improve access to family doctors...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read More</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Immigration Updates Section -->
+        <section id="immigration" class="mb-12">
+            <h2 class="section-title">Immigration Updates</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Immigration Update 1 -->
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Express Entry Draw Results</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 22, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Immigration, Refugees and Citizenship Canada (IRCC) conducted a new Express Entry draw, inviting X number of candidates...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">View Full Details</a>
+                </div>
+                <!-- Immigration Update 2 -->
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Changes to Provincial Nominee Programs (PNPs)</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 18, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">Several provinces have updated their Provincial Nominee Programs, adjusting eligibility criteria for various streams...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Learn More</a>
+                </div>
+                <!-- Immigration Update 3 -->
+                <div class="card">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">New Pathways for Healthcare Professionals</h3>
+                    <p class="text-gray-600 text-sm mb-3">June 15, 2025</p>
+                    <p class="text-gray-700 leading-relaxed">IRCC has introduced new immigration pathways aimed at attracting and retaining skilled healthcare workers in Canada...</p>
+                    <a href="#" class="text-blue-600 hover:underline mt-4 inline-block">Read Announcement</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Daily Events Section -->
+        <section id="events" class="mb-12">
+            <h2 class="section-title">Daily Events</h2>
+            <p id="current-date" class="text-lg font-medium text-gray-800 mb-4"></p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Event 1 -->
+                <div class="card flex items-center p-4">
+                    <div class="flex-shrink-0 bg-blue-100 text-blue-800 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">
+                        22
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Local Farmers' Market</h3>
+                        <p class="text-gray-600 text-sm">9:00 AM - 2:00 PM | Downtown Square</p>
+                    </div>
+                </div>
+                <!-- Event 2 -->
+                <div class="card flex items-center p-4">
+                    <div class="flex-shrink-0 bg-green-100 text-green-800 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">
+                        23
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Community Cleanup Drive</h3>
+                        <p class="text-gray-600 text-sm">10:00 AM - 1:00 PM | City Park</p>
+                    </div>
+                </div>
+                <!-- Event 3 -->
+                <div class="card flex items-center p-4">
+                    <div class="flex-shrink-0 bg-yellow-100 text-yellow-800 rounded-full w-12 h-12 flex items-center justify-center text-xl font-bold mr-4">
+                        24
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900">Online Tech Webinar: AI in Canada</h3>
+                        <p class="text-gray-600 text-sm">3:00 PM EST | Virtual Event</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Multimedia Section -->
+        <section id="multimedia" class="mb-12">
+            <h2 class="section-title">Multimedia Content</h2>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Videos</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Video 1 (YouTube Embed) -->
+                <div class="card p-4">
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">Discover Canada: Scenic Landscapes</h4>
+                    <div class="media-container">
+                        <iframe src="https://www.youtube.com/embed/videoseries?list=PLwB0v7gq4h2B5y4g0P4z4y0z4y0z4y0z4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                </div>
+                <!-- Video 2 (Placeholder) -->
+                <div class="card p-4">
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">Immigration Success Stories</h4>
+                    <div class="media-container">
+                        <video controls class="w-full h-full rounded-md bg-gray-200">
+                            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Audios</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Audio 1 (Podcast Embed/Player) -->
+                <div class="card p-4">
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">Canadian News Briefing (Daily Podcast)</h4>
+                    <audio controls class="w-full rounded-md">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <p class="text-gray-600 text-sm mt-2">Source: Sample Podcast, Episode 1</p>
+                </div>
+                <!-- Audio 2 (Placeholder) -->
+                <div class="card p-4">
+                    <h4 class="text-xl font-semibold text-gray-900 mb-3">Interview with an Immigration Expert</h4>
+                    <audio controls class="w-full rounded-md">
+                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <p class="text-gray-600 text-sm mt-2">Source: Interview Series</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4 mt-8">Images</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Image 1 -->
+                <div class="card p-4">
+                    <img src="https://placehold.co/600x400/FF0000/FFFFFF?text=Maple+Leaf" alt="Maple Leaf" class="w-full h-auto object-cover rounded-md shadow-sm">
+                    <p class="text-center text-sm text-gray-600 mt-2">The iconic Canadian Maple Leaf.</p>
+                </div>
+                <!-- Image 2 -->
+                <div class="card p-4">
+                    <img src="https://placehold.co/600x400/0000FF/FFFFFF?text=Rocky+Mountains" alt="Rocky Mountains" class="w-full h-auto object-cover rounded-md shadow-sm">
+                    <p class="text-center text-sm text-gray-600 mt-2">Majestic Rocky Mountains.</p>
+                </div>
+                <!-- Image 3 -->
+                <div class="card p-4">
+                    <img src="https://placehold.co/600x400/008000/FFFFFF?text=CN+Tower" alt="CN Tower" class="w-full h-auto object-cover rounded-md shadow-sm">
+                    <p class="text-center text-sm text-gray-600 mt-2">Toronto's famous CN Tower.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white p-6 text-center shadow-inner mt-12">
+        <div class="container mx-auto">
+            <p>&copy; 2025 My Canada Hub. All rights reserved. | <a href="#" class="hover:underline">Privacy Policy</a></p>
+            <p class="mt-2 text-sm">Data sources are illustrative and would need to be integrated via APIs for live updates.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for dynamic content (e.g., current date) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dateElement = document.getElementById('current-date');
+            if (dateElement) {
+                const today = new Date();
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                dateElement.textContent = `Today's Date: ${today.toLocaleDateString('en-US', options)}`;
+            }
+
+            // Example of how you might dynamically load more content
+            // (This is illustrative; actual API calls would be needed)
+            // const loadMoreNewsButton = document.getElementById('load-more-news');
+            // if (loadMoreNewsButton) {
+            //     loadMoreNewsButton.addEventListener('click', () => {
+            //         alert('Loading more news... (requires backend integration)');
+            //     });
+            // }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,377 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devendrappa's Portfolio Presentation</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pptxgenjs/3.12.0/pptxgen.min.js"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto p-4">
+    <!-- Editor Controls -->
+    <div class="mb-4 flex justify-between">
+      <div>
+        <button onclick="addSlide()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Slide</button>
+        <button onclick="removeSlide()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Remove Slide</button>
+      </div>
+      <button onclick="exportToPPTX()" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Export to PPTX</button>
+    </div>
+
+    <!-- Slide Container -->
+    <div id="slides-container" class="space-y-4"></div>
+
+    <!-- Navigation -->
+    <div class="mt-4 flex justify-between">
+      <button onclick="prevSlide()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Previous</button>
+      <button onclick="nextSlide()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Next</button>
+    </div>
+  </div>
+
+  <script>
+    // Initial slide data from the provided HTML
+    const initialSlides = [
+      {
+        title: "Introduction",
+        content: `
+          <h1 class="text-4xl font-bold">Devendrappa</h1>
+          <p class="text-xl">IT Project Manager | Agile Practitioner (Certified ScrumMaster®)</p>
+          <p class="mt-2">📍 Bengaluru, Karnataka, India</p>
+          <p>🌐 http://[email protected]</p>
+          <p>📧 [email protected]</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "About Me",
+        content: `
+          <h2 class="text-2xl font-bold">About Me</h2>
+          <p>Certified Scrum Master (CSM) with 10 years of experience in Agile project management.</p>
+          <ul class="list-disc ml-6 mt-2">
+            <li><strong>Facilitation:</strong> Leading daily stand-ups, sprint planning, reviews, and retrospectives.</li>
+            <li><strong>Coaching:</strong> Enhancing team collaboration and Agile adoption.</li>
+            <li><strong>Remove Impediments:</strong> Ensuring smooth, high-performing Scrum teams.</li>
+            <li><strong>Goal:</strong> Maximize productivity and foster continuous improvement.</li>
+          </ul>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Skills and Expertise",
+        content: `
+          <h2 class="text-2xl font-bold">Skills and Expertise</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p><strong>Agile Methodologies</strong><br>Scrum, Kanban, XP, LeSS, SAFe</p>
+              <p><strong>Facilitation</strong><br>Sprint Planning, Daily Scrum, Reviews, Workshops</p>
+              <p><strong>Tools</strong><br>Jira, Confluence, Trello</p>
+            </div>
+            <div>
+              <p><strong>Coaching</strong><br>Mentoring teams and stakeholders</p>
+              <p><strong>Conflict Resolution</strong><br>Identifying and resolving conflicts</p>
+              <p><strong>Certifications</strong><br>CSM, Generative AI for PM, Google PM</p>
+            </div>
+          </div>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Case Study: Narayana Health",
+        content: `
+          <h2 class="text-2xl font-bold">Case Study: Narayana Health</h2>
+          <p><strong>Zendesk Sell & Support Implementation</strong></p>
+          <p><strong>Client:</strong> Healthcare, 250 agents</p>
+          <p><strong>Challenges:</strong> Manual lead handling, slow support, data migration gaps</p>
+          <p><strong>Solutions:</strong> Automated lead assignments, ticket routing, self-service portal, HMS/EMR integration</p>
+          <p><strong>Results:</strong> 30% higher lead conversions, 40% faster responses, 35% better SLA compliance</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Case Study: Glassco",
+        content: `
+          <h2 class="text-2xl font-bold">Case Study: Glassco</h2>
+          <p><strong>Zendesk Sell CRM Implementation</strong></p>
+          <p><strong>Client:</strong> Lab Equipment, 25 sales agents</p>
+          <p><strong>Challenges:</strong> Manual sales tracking, no integrations, expense issues</p>
+          <p><strong>Solutions:</strong> Custom CRM pipeline, Google Maps mileage tracker, SAP/LinkedIn integration</p>
+          <p><strong>Results:</strong> Improved sales tracking, higher conversions, automated expenses</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Case Study: Everise",
+        content: `
+          <h2 class="text-2xl font-bold">Case Study: Everise</h2>
+          <p><strong>Zendesk Suite + ITSM Implementation</strong></p>
+          <p><strong>Client:</strong> Customer Experience, 460,000+ employees</p>
+          <p><strong>Challenges:</strong> Inefficient ticket logging, limited ITSM automation</p>
+          <p><strong>Solutions:</strong> Omnichannel support, MyndBend/OpsGenie integration, SLA tracking</p>
+          <p><strong>Results:</strong> 55% to 92% CSAT, 37h to 7h response time, 20% cost reduction</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Case Study: QualityKiosk",
+        content: `
+          <h2 class="text-2xl font-bold">Case Study: QualityKiosk</h2>
+          <p><strong>Zendesk Suite + ITSM Implementation</strong></p>
+          <p><strong>Client:</strong> IT Services</p>
+          <p><strong>Challenges:</strong> Manual ITSM workflows, no self-service, limited analytics</p>
+          <p><strong>Solutions:</strong> Automated incident/change management, HRMS integration, dashboards</p>
+          <p><strong>Results:</strong> 92% CSAT, 19% higher resolution efficiency, 20% cost reduction</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Case Study: The Art of Living",
+        content: `
+          <h2 class="text-2xl font-bold">Case Study: The Art of Living</h2>
+          <p><strong>Salesforce Sales & Marketing Cloud</strong></p>
+          <p><strong>Client:</strong> Non-Profit, Wellness & Education</p>
+          <p><strong>Challenges:</strong> Disconnected sales/marketing, manual data handling</p>
+          <p><strong>Solutions:</strong> Marketing automation, custom dashboards, legacy data migration</p>
+          <p><strong>Results:</strong> Improved lead conversion, automated workflows, enhanced visibility</p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      },
+      {
+        title: "Contact Me",
+        content: `
+          <h2 class="text-2xl font-bold">Contact Me</h2>
+          <p>Let’s work together to enhance your Agile team performance!</p>
+          <p><strong>Upwork:</strong> <a href="#" class="text-blue-500">View Profile</a></p>
+          <p class="mt-4 text-sm">Confidential | Jun 2025</p>
+        `
+      }
+    ];
+
+    let slides = [...initialSlides];
+    let currentSlideIndex = 0;
+
+    // Render slides
+    function renderSlides() {
+      const container = document.getElementById('slides-container');
+      container.innerHTML = '';
+      slides.forEach((slide, index) => {
+        const slideElement = document.createElement('div');
+        slideElement.className = `slide bg-white p-6 rounded shadow ${index === currentSlideIndex ? '' : 'hidden'}`;
+        slideElement.innerHTML = `
+          <div contenteditable="true" class="slide-content">${slide.content}</div>
+          <input type="text" value="${slide.title}" class="slide-title w-full text-xl font-bold mb-2" placeholder="Slide Title">
+        `;
+        container.appendChild(slideElement);
+      });
+      updateSlideContent();
+    }
+
+    // Update slide content on edit
+    function updateSlideContent() {
+      const slideElements = document.querySelectorAll('.slide');
+      slideElements.forEach((slide, index) => {
+        const content = slide.querySelector('.slide-content');
+        const title = slide.querySelector('.slide-title');
+        content.addEventListener('input', () => {
+          slides[index].content = content.innerHTML;
+        });
+        title.addEventListener('input', () => {
+          slides[index].title = title.value;
+        });
+      });
+    }
+
+    // Add new slide
+    function addSlide() {
+      slides.push({
+        title: `New Slide ${slides.length + 1}`,
+        content: `<h2 class="text-2xl font-bold">New Slide</h2><p>Edit this content...</p>`
+      });
+      currentSlideIndex = slides.length - 1;
+      renderSlides();
+    }
+
+    // Remove current slide
+    function removeSlide() {
+      if (slides.length > 1) {
+        slides.splice(currentSlideIndex, 1);
+        if (currentSlideIndex >= slides.length) {
+          currentSlideIndex = slides.length - 1;
+        }
+        renderSlides();
+      } else {
+        alert('Cannot remove the last slide.');
+      }
+    }
+
+    // Navigate to previous slide
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        renderSlides();
+      }
+    }
+
+    // Navigate to next slide
+    function nextSlide() {
+      if (currentSlideIndex < slides.length - 1) {
+        currentSlideIndex++;
+        renderSlides();
+      }
+    }
+
+ 
+    // Export to PPTX
+    function exportToPPTX() {
+      let pptx = new PptxGenJS();
+      slides.forEach(slide => {
+        let slideObj = pptx.addSlide();
+        let yPos = 0.5; // Starting Y position for text elements
+
+        // Add title
+        slideObj.addText(slide.title, { x: 0.5, y: yPos, fontSize: 28, bold: true });
+        yPos += 1.0; // Move Y position down for content
+
+        // Parse and add content
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(slide.content, 'text/html');
+        const bodyChildren = doc.body.children;
+
+        Array.from(bodyChildren).forEach(element => {
+          let textOptions = { x: 0.5, y: yPos, fontSize: 18, w: 9 }; // Default text options
+          let textContent = element.textContent.trim();
+
+          if (textContent === "") {
+            return; // Skip empty elements
+          }
+
+          switch (element.tagName.toLowerCase()) {
+            case 'h1':
+              textOptions.fontSize = 32;
+              textOptions.bold = true;
+              slideObj.addText(textContent, textOptions);
+              yPos += 0.8;
+              break;
+            case 'h2':
+              textOptions.fontSize = 24;
+              textOptions.bold = true;
+              slideObj.addText(textContent, textOptions);
+              yPos += 0.6;
+              break;
+            case 'p':
+              // Check if it's the "Confidential" footer
+              if (element.classList.contains('text-sm') && textContent.includes('Confidential')) {
+                textOptions.fontSize = 10;
+                textOptions.y = 7; // Position at bottom of slide
+                slideObj.addText(textContent, textOptions);
+                // No yPos increment as it's a fixed footer
+              } else {
+                slideObj.addText(textContent, textOptions);
+                yPos += 0.4;
+              }
+              break;
+            case 'ul':
+              Array.from(element.children).forEach(li => {
+                let liText = li.textContent.trim();
+                if (liText) {
+                  // Check for strong tags within list items
+                  const strongTags = li.querySelectorAll('strong');
+                  let formattedLiText = [];
+                  let lastIndex = 0;
+
+                  strongTags.forEach(strong => {
+                    const beforeText = liText.substring(lastIndex, li.indexOf(strong)).trim();
+                    if (beforeText) {
+                        formattedLiText.push({ text: beforeText });
+                    }
+                    formattedLiText.push({ text: strong.textContent, options: { bold: true } });
+                    lastIndex = li.indexOf(strong) + strong.textContent.length;
+                  });
+
+                  const remainingText = liText.substring(lastIndex).trim();
+                  if (remainingText) {
+                      formattedLiText.push({ text: remainingText });
+                  }
+
+                  slideObj.addText(`• ${formattedLiText}`, { ...textOptions, indentLevel: 1 });
+                  yPos += 0.3;
+                }
+              });
+              break;
+            case 'div': // For the skills grid
+                if (element.classList.contains('grid')) {
+                    Array.from(element.children).forEach(divCol => {
+                        Array.from(divCol.children).forEach(pTag => {
+                            let pText = pTag.textContent.trim();
+                            if (pText) {
+                                slideObj.addText(pText, { ...textOptions, x: textOptions.x + (divCol.offsetLeft > 0 ? 4.5 : 0) });
+                                yPos += 0.4;
+                            }
+                        });
+                    });
+                }
+                break;
+            case 'a': // For links
+                slideObj.addText(textContent, { ...textOptions, hyperlink: { url: element.href } });
+                yPos += 0.3;
+                break;
+            default:
+              slideObj.addText(textContent, textOptions);
+              yPos += 0.4;
+              break;
+          }
+        });
+      });
+      pptx.writeFile({ fileName: 'Portfolio_Presentation.pptx' });
+    });
+    }
+
+    // Strip HTML tags for PPTX export
+    function stripHtml(html) {
+      let doc = new DOMParser().parseFromString(html, 'text/html');
+      return doc.body.textContent || '';
+    }
+
+    // Initialize
+    renderSlides();
+  </script>
+</body>
+</html>

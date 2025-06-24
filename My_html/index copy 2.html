@@ -1,0 +1,351 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editable Portfolio Presentation</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/babel-standalone@6.26.0/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+    const { jsPDF } = window.jspdf;
+
+    const initialSlides = [
+      {
+        title: "Devendrappa",
+        subtitle: "IT Project Manager | Agile Practitioner (Certified ScrumMaster®)",
+        content: [
+          "📍 Bengaluru, Karnataka, India",
+          "🌐 http://[email protected]",
+          "📧 [email protected]"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "About Me",
+        content: [
+          "Certified Scrum Master (CSM) with 10 years of experience in Agile project management.",
+          "- **Facilitation**: Leading daily stand-ups, sprint planning, reviews, and retrospectives.",
+          "- **Coaching**: Enhancing team collaboration and Agile adoption.",
+          "- **Remove Impediments**: Ensuring smooth, high-performing Scrum teams.",
+          "- **Goal**: Maximize productivity and foster continuous improvement."
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Skills and Expertise",
+        content: [
+          "- **Agile Methodologies**: Scrum, Kanban, XP, LeSS, SAFe",
+          "- **Facilitation**: Sprint Planning, Daily Scrum, Reviews, Workshops",
+          "- **Tools**: Jira, Confluence, Trello",
+          "- **Coaching**: Mentoring teams and stakeholders",
+          "- **Conflict Resolution**: Identifying and resolving conflicts",
+          "- **Certifications**: CSM, Generative AI for PM, Google PM"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Case Study: Narayana Health",
+        subtitle: "Zendesk Sell & Support Implementation",
+        content: [
+          "- **Client**: Healthcare, 250 agents",
+          "- **Challenges**: Manual lead handling, slow support, data migration gaps",
+          "- **Solutions**: Automated lead assignments, ticket routing, self-service portal, HMS/EMR integration",
+          "- **Results**: 30% higher lead conversions, 40% faster responses, 35% better SLA compliance"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Case Study: Glassco",
+        subtitle: "Zendesk Sell CRM Implementation",
+        content: [
+          "- **Client**: Lab Equipment, 25 sales agents",
+          "- **Challenges**: Manual sales tracking, no integrations, expense issues",
+          "- **Solutions**: Custom CRM pipeline, Google Maps mileage tracker, SAP/LinkedIn integration",
+          "- **Results**: Improved sales tracking, higher conversions, automated expenses"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Case Study: Everise",
+        subtitle: "Zendesk Suite + ITSM Implementation",
+        content: [
+          "- **Client**: Customer Experience, 460,000+ employees",
+          "- **Challenges**: Inefficient ticket logging, limited ITSM automation",
+          "- **Solutions**: Omnichannel support, MyndBend/OpsGenie integration, SLA tracking",
+          "- **Results**: 55% to 92% CSAT, 37h to 7h response time, 20% cost reduction"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Case Study: QualityKiosk",
+        subtitle: "Zendesk Suite + ITSM Implementation",
+        content: [
+          "- **Client**: IT Services",
+          "- **Challenges**: Manual ITSM workflows, no self-service, limited analytics",
+          "- **Solutions**: Automated incident/change management, HRMS integration, dashboards",
+          "- **Results**: 92% CSAT, 19% higher resolution efficiency, 20% cost reduction"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Case Study: The Art of Living",
+        subtitle: "Salesforce Sales & Marketing Cloud",
+        content: [
+          "- **Client**: Non-Profit, Wellness & Education",
+          "- **Challenges**: Disconnected sales/marketing, manual data handling",
+          "- **Solutions**: Marketing automation, custom dashboards, legacy data migration",
+          "- **Results**: Improved lead conversion, automated workflows, enhanced visibility"
+        ],
+        footer: "Confidential | Jun 2025"
+      },
+      {
+        title: "Contact Me",
+        content: [
+          "Let’s work together to enhance your Agile team performance!",
+          "- **Upwork**: [View Profile](https://www.upwork.com)"
+        ],
+        footer: "Confidential | Jun 2025"
+      }
+    ];
+
+    function App() {
+      const [slides, setSlides] = useState(() => {
+        const savedSlides = localStorage.getItem('portfolioSlides');
+        return savedSlides ? JSON.parse(savedSlides) : initialSlides;
+      });
+      const [currentSlide, setCurrentSlide] = useState(0);
+      const [isEditing, setIsEditing] = useState(false);
+
+      useEffect(() => {
+        localStorage.setItem('portfolioSlides', JSON.stringify(slides));
+      }, [slides]);
+
+      const handleEditSlide = (index, field, value) => {
+        const newSlides = [...slides];
+        newSlides[index][field] = value;
+        setSlides(newSlides);
+      };
+
+      const handleEditContent = (slideIndex, contentIndex, value) => {
+        const newSlides = [...slides];
+        newSlides[slideIndex].content[contentIndex] = value;
+        setSlides(newSlides);
+      };
+
+      const addContentLine = (slideIndex) => {
+        const newSlides = [...slides];
+        newSlides[slideIndex].content.push("");
+        setSlides(newSlides);
+      };
+
+      const removeContentLine = (slideIndex, contentIndex) => {
+        const newSlides = [...slides];
+        newSlides[slideIndex].content.splice(contentIndex, 1);
+        setSlides(newSlides);
+      };
+
+      const addSlide = () => {
+        const newSlides = [...slides, {
+          title: "New Slide",
+          subtitle: "",
+          content: ["Enter content here"],
+          footer: "Confidential | Jun 2025"
+        }];
+        setSlides(newSlides);
+        setCurrentSlide(newSlides.length - 1);
+      };
+
+      const removeSlide = (index) => {
+        if (slides.length <= 1) return;
+        const newSlides = slides.filter((_, i) => i !== index);
+        setSlides(newSlides);
+        if (currentSlide >= newSlides.length) {
+          setCurrentSlide(newSlides.length - 1);
+        }
+      };
+
+      const downloadAsPDF = () => {
+        const doc = new jsPDF();
+        slides.forEach((slide, index) => {
+          if (index > 0) doc.addPage();
+          doc.setFontSize(22);
+          doc.text(slide.title, 20, 20);
+          if (slide.subtitle) {
+            doc.setFontSize(16);
+            doc.text(slide.subtitle, 20, 30);
+          }
+          doc.setFontSize(12);
+          slide.content.forEach((line, i) => {
+            doc.text(line.replace(/[-*]/g, '•'), 20, 40 + i * 10);
+          });
+          doc.setFontSize(10);
+          doc.text(slide.footer, 20, 280);
+        });
+        doc.save('portfolio_presentation.pdf');
+      };
+
+      return (
+        <div className="min-h-screen bg-gray-100 flex flex-col items-center p-4">
+          <div className="w-full max-w-4xl bg-white shadow-lg rounded-lg p-6">
+            <div className="flex justify-between mb-4">
+              <button
+                onClick={() => setIsEditing(!isEditing)}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              >
+                {isEditing ? 'Save' : 'Edit'}
+              </button>
+              <button
+                onClick={addSlide}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Add Slide
+              </button>
+              <button
+                onClick={() => removeSlide(currentSlide)}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+                disabled={slides.length <= 1}
+              >
+                Remove Slide
+              </button>
+              <button
+                onClick={downloadAsPDF}
+                className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+              >
+                Download as PDF
+              </button>
+            </div>
+            <div className="flex justify-between mb-4">
+              <button
+                onClick={() => setCurrentSlide(currentSlide > 0 ? currentSlide - 1 : 0)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                disabled={currentSlide === 0}
+              >
+                Previous
+              </button>
+              <span>Slide {currentSlide + 1} of {slides.length}</span>
+              <button
+                onClick={() => setCurrentSlide(currentSlide < slides.length - 1 ? currentSlide + 1 : slides.length - 1)}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+                disabled={currentSlide === slides.length - 1}
+              >
+                Next
+              </button>
+            </div>
+            <div className="border p-6 rounded-lg bg-gray-50">
+              {isEditing ? (
+                <div>
+                  <input
+                    type="text"
+                    value={slides[currentSlide].title}
+                    onChange={(e) => handleEditSlide(currentSlide, 'title', e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
+                    placeholder="Slide Title"
+                  />
+                  <input
+                    type="text"
+                    value={slides[currentSlide].subtitle}
+                    onChange={(e) => handleEditSlide(currentSlide, 'subtitle', e.target.value)}
+                    className="w-full p-2 mb-2 border rounded"
+                    placeholder="Slide Subtitle"
+                  />
+                  {slides[currentSlide].content.map((line, index) => (
+                    <div key={index} className="flex mb-2">
+                      <input
+                        type="text"
+                        value={line}
+                        onChange={(e) => handleEditContent(currentSlide, index, e.target.value)}
+                        className="w-full p-2 border rounded"
+                        placeholder="Content line"
+                      />
+                      <button
+                        onClick={() => removeContentLine(currentSlide, index)}
+                        className="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    onClick={() => addContentLine(currentSlide)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    Add Content Line
+                  </button>
+                  <input
+                    type="text"
+                    value={slides[currentSlide].footer}
+                    onChange={(e) => handleEditSlide(currentSlide, 'footer', e.target.value)}
+                    className="w-full p-2 mt-2 border rounded"
+                    placeholder="Footer"
+                  />
+                </div>
+              ) : (
+                <div>
+                  <h1 className="text-3xl font-bold mb-2">{slides[currentSlide].title}</h1>
+                  {slides[currentSlide].subtitle && (
+                    <h2 className="text-xl font-semibold mb-4">{slides[currentSlide].subtitle}</h2>
+                  )}
+                  <ul className="list-disc pl-5">
+                    {slides[currentSlide].content.map((line, index) => (
+                      <li key={index} className="mb-2">{line}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-4 text-sm text-gray-500">{slides[currentSlide].footer}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
+</body>
+</html>

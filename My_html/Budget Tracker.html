@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Budget Tracker</title> <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
+        }
+        .income-bg { background-color: #d1fae5; } /* Light green */
+        .expense-bg { background-color: #fee2e2; } /* Light red */
+        .savings-bg { background-color: #fef3c7; } /* Light yellow */
+        .income-text { color: #10b981; } /* Green */
+        .expense-text { color: #ef4444; } /* Red */
+        .savings-text { color: #f59e0b; } /* Orange */
+        .shadow-glow { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); }
+        .hover-scale { transition: transform 0.2s; }
+        .hover-scale:hover { transform: scale(1.02); }
+
+        /* Drag and Drop styles */
+        .draggable-row {
+            cursor: grab;
+        }
+        .draggable-row.dragging {
+            opacity: 0.5;
+        }
+        .draggable-row.over {
+            border-top: 2px solid #3b82f6; /* Blue border to indicate drop target */
+        }
+    </style>
+</head>
+<body class="font-sans min-h-screen">
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <h1 class="text-4xl font-bold text-center text-gray-800 mb-8 rounded-lg p-3 bg-white shadow-glow" id="mainTitle">Monthly Budget Tracker</h1>
+
+        <div class="form-container bg-white rounded-lg shadow-glow p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Add New Entry</h2>
+            <form id="budgetForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <select id="type" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                    <option value="Income">Income</option>
+                    <option value="Expense">Expense</option>
+                    <option value="Savings">Savings</option>
+                </select>
+                <select id="category" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                    <option value="" disabled selected>Select Category</option>
+                    </select>
+                <input type="number" id="amount" placeholder="Amount (₹)" required min="0" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                <input type="date" id="date" required class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500">
+                <input type="text" id="notes" placeholder="Notes" class="border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 md:col-span-2">
+                <button type="submit" class="bg-indigo-600 text-white rounded-lg p-2 hover:bg-indigo-700 transition-colors md:col-span-2 shadow-md hover:shadow-lg">Add Entry</button>
+            </form>
+        </div>
+
+        <div class="table-container bg-white rounded-lg shadow-glow p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Transactions</h2>
+            <table id="budgetTable" class="w-full">
+                <thead>
+                    <tr class="bg-gray-100">
+                        <th class="p-3 text-left text-gray-700">Category</th>
+                        <th class="p-3 text-left text-gray-700">Type</th>
+                        <th class="p-3 text-left text-gray-700">Amount (₹)</th>
+                        <th class="p-3 text-left text-gray-700">Date</th>
+                        <th class="p-3 text-left text-gray-700">Notes</th>
+                        <th class="p-3 text-left text-gray-700">Actions</th>
+                    </tr>
+                    <tr class="bg-gray-50">
+                        <th class="p-2">
+                            <select id="filterCategory" class="w-full border rounded p-1 text-sm">
+                                <option value="">All Categories</option>
+                            </select>
+                        </th>
+                        <th class="p-2">
+                            <select id="filterType" class="w-full border rounded p-1 text-sm">
+                                <option value="">All Types</option>
+                            </select>
+                        </th>
+                        <th class="p-2"><input type="number" id="filterAmount" placeholder="Filter Amount" class="w-full border rounded p-1 text-sm"></th>
+                        <th class="p-2"><input type="text" id="filterDate" placeholder="Filter Date (dd-mm-yyyy)" class="w-full border rounded p-1 text-sm"></th>
+                        <th class="p-2"><input type="text" id="filterNotes" placeholder="Filter Notes" class="w-full border rounded p-1 text-sm"></th>
+                        <th class="p-2"></th> </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="summary-container bg-white rounded-lg shadow-glow p-6 mb-8">
+            <h2 class="text-2xl font-semibold text-gray-700 mb-4">Summary</h2>
+            <p class="text-lg">Total Income: ₹<span id="totalIncome" class="income-text font-semibold">0</span></p>
+            <p class="text-lg">Total Expenses: ₹<span id="totalExpenses" class="expense-text font-semibold">0</span></p>
+            <p class="text-lg">Total Savings: ₹<span id="totalSavings" class="savings-text font-semibold">0</span></p>
+            <p class="text-lg">Net Balance: ₹<span id="netBalance" class="font-semibold">0</span></p>
+            <button onclick="exportToCSV()" class="mt-4 bg-green-600 text-white rounded-lg p-2 hover:bg-green-700 transition-colors shadow-md hover:shadow-lg">Export to CSV</button>
+        </div>
+
+        <div class="flex flex-col lg:flex-row gap-8 mb-8">
+            <div class="chart-container bg-white rounded-lg shadow-glow p-6 flex-1 max-w-4xl">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Budget Overview</h2>
+                <canvas id="budgetOverviewChart" class="w-full mx-auto"></canvas>
+                <button onclick="exportChartAsPNG('budgetOverviewChart', 'Budget_Overview')" class="mt-4 bg-gray-600 text-white rounded-lg p-2 hover:bg-gray-700 transition-colors shadow-md hover:shadow-lg w-full">Export Chart as PNG</button>
+            </div>
+
+            <div class="chart-container bg-white rounded-lg shadow-glow p-6 flex-1 max-w-4xl">
+                <h2 class="text-2xl font-semibold text-gray-700 mb-4">Expenses by Category</h2>
+                <canvas id="expensesByCategoryBarChart" class="w-full mx-auto"></canvas>
+                <button onclick="exportChartAsPNG('expensesByCategoryBarChart', 'Expenses_by_Category')" class="mt-4 bg-gray-600 text-white rounded-lg p-2 hover:bg-gray-700 transition-colors shadow-md hover:shadow-lg w-full">Export Chart as PNG</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let entries = []; // Stores all budget entries
+        let budgetOverviewChart; // Chart for Income, Total Expenses, Savings breakdown (Pie Chart)
+        let expensesByCategoryBarChart; // Chart for Expenses by Category (Bar Chart)
+
+        // Define categories for different types
+        const categories = {
+            "Income": ["Salary", "Freelance", "FD Interest", "Investments", "Gifts", "Other Income"],
+            "Expense": [
+                "Rent",
+                "Utilities",
+                "Groceries & Essentials",
+                "Petrol",
+                "Food & Dining",
+                "Personal Care",
+                "Hospital / Medicine",
+                "Health & Insurance",
+                "Insurance",
+                "Entertainment",
+                "Gifts & Giving",
+                "EMI",
+                "Digital & Subscriptions",
+                "Other Shopping",
+                "Miscellaneous",
+                "Trip"
+            ],
+            "Savings": [
+                "Savings",
+                "Investment",
+                "Emergency Fund",
+                "Retirement",
+                "Education",
+                "Other Savings"
+            ]
+        };
+
+        // Colors for charts
+        const chartColors = {
+            'Income': '#10b981', // Green
+            'Expense': '#ef4444', // Red (for general 'Expenses' type in Budget Overview chart)
+            'Savings': '#f59e0b', // Orange (specific category color)
+
+            // Specific colors for Expense categories (for Expenses by Category chart)
+            'Rent': '#4a5568', // Dark gray
+            'Utilities': '#2d3748', // Even darker gray
+            'Groceries & Essentials': '#38a169', // Darker green
+            'Petrol': '#d53f8c', // Pinkish purple
+            'Food & Dining': '#ed8936', // Orange-brown
+            'Personal Care': '#ecc94b', // Light yellow-brown
+            'Hospital / Medicine': '#63b3ed', // Lighter blue
+            'Health & Insurance': '#4299e1', // Blue
+            'Insurance': '#9f7aea', // Light purple
+            'Entertainment': '#e53e3e', // Strong red
+            'Gifts & Giving': '#3182ce', // Strong blue
+            'EMI': '#facc15', // Yellow-orange
+            'Digital & Subscriptions': '#a0aec0', // Medium gray
+            'Other Shopping': '#fc8181', // Lighter red
+            'Miscellaneous': '#808080', // Gray
+            'Trip': '#FFD700', // Gold color for Trip
+
+            // Fallback colors for expenses categories if not explicitly listed above
+            'defaultExpense': ['#a0aec0', '#c0c0c0', '#e0e0e0', '#808080', '#606060', '#404040', '#202020']
+        };
+
+
+        // --- Persistence Functions (localStorage) ---
+
+        // Function to save entries to localStorage
+        function saveEntries() {
+            localStorage.setItem('budgetEntries', JSON.stringify(entries));
+        }
+
+        // Function to load entries from localStorage
+        function loadEntries() {
+            const storedEntries = localStorage.getItem('budgetEntries');
+            if (storedEntries) {
+                entries = JSON.parse(storedEntries);
+            } else {
+                // Initialize with a default entry if no data is found
+                entries = [
+                    { category: "Salary", type: "Income", amount: 79000, date: "2025-06-01", notes: "Monthly salary" }
+                ];
+            }
+        }
+
+
+        // --- Date Formatting ---
+
+        // Function to format date as dd-mm-yyyy
+        function formatDate(dateString) {
+            const date = new Date(dateString + 'T00:00:00'); // Add T00:00:00 to avoid timezone issues
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`;
+        }
+
+
+        // --- Dynamic Page Title & Heading ---
+
+        // Function to update the page title and main heading based on the latest date entry
+        function updatePageTitle() {
+            const dateInput = document.getElementById('date');
+            const selectedDate = dateInput.value;
+
+            let titleMonthYear = "Overall"; // Default title if no date is selected or entries are empty
+
+            if (selectedDate) {
+                const date = new Date(selectedDate + 'T00:00:00');
+                const month = date.toLocaleString('en-US', { month: 'long' });
+                const year = date.getFullYear();
+                titleMonthYear = `${month} ${year}`;
+            } else if (entries.length > 0) {
+                // If no date is selected in the form, but there are entries,
+                // try to derive the latest month/year from existing entries.
+                // Note: since sorting is manual, we can just take the first entry's date for initial title
+                // or keep "Overall" if no specific date context is needed for existing data.
+                // For simplicity, let's just use the current month/year if no entries, or the first entry's month/year
+                 const firstEntryDate = entries[0]?.date;
+                 if (firstEntryDate) {
+                    const date = new Date(firstEntryDate + 'T00:00:00');
+                    const month = date.toLocaleString('en-US', { month: 'long' });
+                    const year = date.getFullYear();
+                    titleMonthYear = `${month} ${year}`;
+                 } else {
+                    const today = new Date();
+                    const month = today.toLocaleString('en-US', { month: 'long' });
+                    const year = today.getFullYear();
+                    titleMonthYear = `${month} ${year}`;
+                 }
+            } else {
+                 const today = new Date();
+                 const month = today.toLocaleString('en-US', { month: 'long' });
+                 const year = today.getFullYear();
+                 titleMonthYear = `${month} ${year}`;
+            }
+
+            document.title = `Monthly Budget Tracker (${titleMonthYear})`;
+            document.getElementById('mainTitle').textContent = `Monthly Budget Tracker (${titleMonthYear})`;
+        }
+
+
+        // --- Dropdown Population ---
+
+        // Function to populate the category dropdown based on the selected type
+        function populateCategoryDropdown() {
+            const typeSelect = document.getElementById('type');
+            const categorySelect = document.getElementById('category');
+            const selectedType = typeSelect.value;
+
+            // Clear existing options
+            categorySelect.innerHTML = '<option value="" disabled selected>Select Category</option>';
+
+            // Populate with categories relevant to the selected type
+            if (categories[selectedType]) {
+                categories[selectedType].forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+            }
+        }
+
+        // Function to populate filter dropdowns dynamically
+        function populateFilterDropdowns() {
+            const filterCategorySelect = document.getElementById('filterCategory');
+            const filterTypeSelect = document.getElementById('filterType');
+
+            // Clear existing options, but keep the "All" option
+            filterCategorySelect.innerHTML = '<option value="">All Categories</option>';
+            filterTypeSelect.innerHTML = '<option value="">All Types</option>';
+
+            // Populate unique categories
+            const uniqueCategories = [...new Set(entries.map(entry => entry.category))].sort();
+            uniqueCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                filterCategorySelect.appendChild(option);
+            });
+
+            // Populate unique types
+            const uniqueTypes = [...new Set(entries.map(entry => entry.type))].sort();
+            uniqueTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type;
+                option.textContent = type;
+                filterTypeSelect.appendChild(option);
+            });
+        }
+
+
+        // --- Table Management (including Drag & Drop and Filtering) ---
+
+        let draggedRow = null; // To keep track of the row being dragged
+
+        function updateTable() {
+            const tbody = document.querySelector('#budgetTable tbody');
+            tbody.innerHTML = '';
+
+            // Get filtered entries
+            const filteredEntries = getFilteredEntries();
+
+            filteredEntries.forEach((entry, index) => {
+                let rowClass = '';
+                if (entry.type === 'Income') {
+                    rowClass = 'income-bg';
+                } else if (entry.type === 'Savings') {
+                    rowClass = 'savings-bg';
+                } else {
+                    rowClass = 'expense-bg';
+                }
+
+                const row = document.createElement('tr');
+                row.className = `hover-scale draggable-row ${rowClass}`;
+                row.setAttribute('draggable', true);
+                // Store the original index in `entries` array, not the filtered index
+                const originalIndex = entries.findIndex(e => e === entry);
+                row.dataset.originalIndex = originalIndex;
+
+                row.innerHTML = `
+                    <td class="p-3">${entry.category}</td>
+                    <td class="p-3">${entry.type}</td>
+                    <td class="p-3">₹${entry.amount.toFixed(2)}</td>
+                    <td class="p-3">${formatDate(entry.date)}</td>
+                    <td class="p-3">${entry.notes || ''}</td>
+                    <td class="p-3">
+                        <button onclick="editEntry(event, ${originalIndex})" class="bg-blue-500 text-white rounded px-2 py-1 hover:bg-blue-600 shadow-sm">Edit</button>
+                        <button onclick="deleteEntry(${originalIndex})" class="bg-red-500 text-white rounded px-2 py-1 hover:bg-red-600 shadow-sm ml-1">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            addDragDropListenersToRows();
+
+            updateSummary();
+            updateAllCharts();
+            saveEntries();
+            updatePageTitle();
+            populateFilterDropdowns(); // Update filter dropdowns after table update
+        }
+
+        function getFilteredEntries() {
+            const filterCategory = document.getElementById('filterCategory').value.toLowerCase();
+            const filterType = document.getElementById('filterType').value.toLowerCase();
+            const filterAmount = document.getElementById('filterAmount').value; // Keep as string for partial match or exact
+            const filterDate = document.getElementById('filterDate').value.toLowerCase();
+            const filterNotes = document.getElementById('filterNotes').value.toLowerCase();
+
+            return entries.filter(entry => {
+                const matchesCategory = filterCategory === '' || entry.category.toLowerCase().includes(filterCategory);
+                const matchesType = filterType === '' || entry.type.toLowerCase().includes(filterType);
+                const matchesAmount = filterAmount === '' || entry.amount.toString().includes(filterAmount); // Match part of the number string
+                const matchesDate = filterDate === '' || formatDate(entry.date).toLowerCase().includes(filterDate);
+                const matchesNotes = filterNotes === '' || (entry.notes || '').toLowerCase().includes(filterNotes);
+
+                return matchesCategory && matchesType && matchesAmount && matchesDate && matchesNotes;
+            });
+        }
+
+        function addDragDropListenersToRows() {
+            const rows = document.querySelectorAll('#budgetTable tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('dragstart', handleDragStart);
+                row.addEventListener('dragover', handleDragOver);
+                row.addEventListener('dragleave', handleDragLeave);
+                row.addEventListener('drop', handleDrop);
+                row.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        function handleDragStart(e) {
+            draggedRow = e.target.closest('tr');
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/plain', draggedRow.dataset.originalIndex);
+            setTimeout(() => {
+                draggedRow.classList.add('dragging');
+            }, 0);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            const targetRow = e.target.closest('tr');
+            if (targetRow && targetRow !== draggedRow) {
+                document.querySelectorAll('.draggable-row.over-top, .draggable-row.over-bottom').forEach(row => {
+                    row.classList.remove('over-top', 'over-bottom');
+                });
+                const rect = targetRow.getBoundingClientRect();
+                const offsetY = e.clientY - rect.top;
+                if (offsetY < rect.height / 2) {
+                    targetRow.classList.add('over-top');
+                } else {
+                    targetRow.classList.add('over-bottom');
+                }
+            }
+        }
+
+        function handleDragLeave(e) {
+            e.target.closest('tr').classList.remove('over-top', 'over-bottom');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const targetRow = e.target.closest('tr');
+
+            if (draggedRow && targetRow && draggedRow !== targetRow) {
+                const draggedOriginalIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const targetOriginalIndex = parseInt(targetRow.dataset.originalIndex);
+
+                const draggedEntry = entries[draggedOriginalIndex];
+                const targetEntry = entries[targetOriginalIndex];
+
+                // Remove the dragged entry
+                entries.splice(draggedOriginalIndex, 1);
+
+                // Find the new index to insert the entry based on the target's new position
+                let newIndex = entries.indexOf(targetEntry);
+                if (draggedOriginalIndex < targetOriginalIndex) {
+                     const rect = targetRow.getBoundingClientRect();
+                     const offsetY = e.clientY - rect.top;
+                     if (offsetY >= rect.height / 2) {
+                         newIndex = newIndex + 1;
+                     }
+                } else {
+                    if (newIndex !== -1) {
+                        const rect = targetRow.getBoundingClientRect();
+                        const offsetY = e.clientY - rect.top;
+                        if (offsetY >= rect.height / 2) {
+                            newIndex = newIndex + 1;
+                        }
+                    } else {
+                        console.error("Target entry not found in current entries array during drag-drop.");
+                        newIndex = 0;
+                    }
+                }
+
+                entries.splice(newIndex, 0, draggedEntry);
+                updateTable();
+            }
+            document.querySelectorAll('.draggable-row.over-top, .draggable-row.over-bottom').forEach(row => {
+                row.classList.remove('over-top', 'over-bottom');
+            });
+        }
+
+
+        function handleDragEnd(e) {
+            draggedRow.classList.remove('dragging');
+            draggedRow = null;
+            document.querySelectorAll('.draggable-row.over-top, .draggable-row.over-bottom').forEach(row => {
+                row.classList.remove('over-top', 'over-bottom');
+            });
+        }
+
+
+        // --- Entry Management ---
+
+        function addEntry(event) {
+            event.preventDefault();
+            const entry = {
+                type: document.getElementById('type').value,
+                category: document.getElementById('category').value,
+                amount: parseFloat(document.getElementById('amount').value),
+                date: document.getElementById('date').value,
+                notes: document.getElementById('notes').value
+            };
+
+            if (!entry.type || !entry.category || isNaN(entry.amount) || entry.amount <= 0 || !entry.date) {
+                alert("Please ensure all required fields (Type, Category, Amount, Date) are filled correctly and Amount is a positive number.");
+                return;
+            }
+
+            entries.push(entry);
+            updateTable();
+            document.getElementById('budgetForm').reset();
+            populateCategoryDropdown();
+        }
+
+        function editEntry(event, originalIndex) {
+            event.stopPropagation();
+
+            const entryToEdit = entries[originalIndex];
+
+            if (entryToEdit) {
+                document.getElementById('type').value = entryToEdit.type;
+                populateCategoryDropdown();
+                document.getElementById('category').value = entryToEdit.category;
+                document.getElementById('amount').value = entryToEdit.amount;
+                document.getElementById('date').value = entryToEdit.date;
+                document.getElementById('notes').value = entryToEdit.notes;
+
+                entries.splice(originalIndex, 1);
+                updateTable();
+            }
+        }
+
+        function deleteEntry(originalIndex) {
+            if (confirm("Are you sure you want to delete this entry?")) {
+                entries.splice(originalIndex, 1);
+                updateTable();
+            }
+        }
+
+
+        // --- Summary Calculations ---
+
+        function updateSummary() {
+            // Summary should always be based on all entries, not filtered ones
+            const totalIncome = entries.reduce((sum, entry) => entry.type === 'Income' ? sum + entry.amount : sum, 0);
+            const totalExpenses = entries.reduce((sum, entry) => (entry.type !== 'Income' && entry.type !== 'Savings') ? sum + entry.amount : sum, 0);
+            const totalSavings = entries.reduce((sum, entry) => entry.type === 'Savings' ? sum + entry.amount : sum, 0);
+            const netBalance = totalIncome - totalExpenses - totalSavings;
+
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2);
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2);
+            document.getElementById('totalSavings').textContent = totalSavings.toFixed(2);
+            document.getElementById('netBalance').textContent = netBalance.toFixed(2);
+        }
+
+
+        // --- Chart Functions ---
+
+        function updateAllCharts() {
+            updateBudgetOverviewChart();
+            updateExpensesByCategoryBarChart();
+        }
+
+        function updateBudgetOverviewChart() {
+            // This chart always uses ALL entries for an overall view
+            const totalIncome = entries.reduce((sum, entry) => entry.type === 'Income' ? sum + entry.amount : sum, 0);
+            const totalExpenses = entries.reduce((sum, entry) => (entry.type !== 'Income' && entry.type !== 'Savings') ? sum + entry.amount : sum, 0);
+            const totalSavings = entries.reduce((sum, entry) => entry.type === 'Savings' ? sum + entry.amount : sum, 0);
+
+            const ctx = document.getElementById('budgetOverviewChart').getContext('2d');
+            if (budgetOverviewChart) budgetOverviewChart.destroy();
+
+            const chartLabels = [];
+            const chartData = [];
+            const chartBackgroundColors = [];
+
+            if (totalIncome > 0) {
+                chartLabels.push('Income');
+                chartData.push(totalIncome);
+                chartBackgroundColors.push(chartColors['Income']);
+            }
+            if (totalExpenses > 0) {
+                chartLabels.push('Total Expenses');
+                chartData.push(totalExpenses);
+                chartBackgroundColors.push(chartColors['Expense']);
+            }
+            if (totalSavings > 0) {
+                chartLabels.push('Savings');
+                chartData.push(totalSavings);
+                chartBackgroundColors.push(chartColors['Savings']);
+            }
+
+            const totalForChart = chartData.reduce((sum, value) => sum + value, 0);
+
+            budgetOverviewChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: chartData,
+                        backgroundColor: chartBackgroundColors,
+                        borderColor: Array(chartLabels.length).fill('#ffffff'),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top', labels: { font: { size: 14 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const value = context.raw;
+                                    const percentage = totalForChart > 0 ? ((value / totalForChart) * 100).toFixed(2) : 0;
+                                    return `${context.label}: ₹${value.toFixed(2)} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateExpensesByCategoryBarChart() {
+            // This chart always uses ALL entries for an overall view
+            const expensesEntries = entries.filter(entry => entry.type !== 'Income' && entry.type !== 'Savings');
+            const categorySums = {};
+
+            expensesEntries.forEach(entry => {
+                if (categorySums[entry.category]) {
+                    categorySums[entry.category] += entry.amount;
+                } else {
+                    categorySums[entry.category] = entry.amount;
+                }
+            });
+
+            const chartLabels = Object.keys(categorySums);
+            const chartData = Object.values(categorySums);
+
+            const categoryBackgroundColors = chartLabels.map((label, index) => {
+                return chartColors[label] || chartColors.defaultExpense[index % chartColors.defaultExpense.length];
+            });
+
+            const ctx = document.getElementById('expensesByCategoryBarChart').getContext('2d');
+            if (expensesByCategoryBarChart) expensesByCategoryBarChart.destroy();
+
+            expensesByCategoryBarChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'Amount (₹)',
+                        data: chartData,
+                        backgroundColor: categoryBackgroundColors,
+                        borderColor: categoryBackgroundColors.map(color => color.replace(')', ', 0.8)')).map(color => color.replace('rgb', 'rgba')),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `${context.label}: ₹${context.raw.toFixed(2)}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Amount (₹)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Category'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
+        // --- Export to CSV ---
+
+        function exportToCSV() {
+            const totalIncome = entries.reduce((sum, entry) => entry.type === 'Income' ? sum + entry.amount : sum, 0);
+            const totalExpenses = entries.reduce((sum, entry) => (entry.type !== 'Income' && entry.type !== 'Savings') ? sum + entry.amount : sum, 0);
+            const totalSavings = entries.reduce((sum, entry) => entry.type === 'Savings' ? sum + entry.amount : sum, 0);
+            const netBalance = totalIncome - totalExpenses - totalSavings;
+
+            let csv = 'Category,Type,Amount (₹),Date,Notes\n';
+            entries.forEach(entry => {
+                csv += `${entry.category},${entry.type},${entry.amount.toFixed(2)},${formatDate(entry.date)},${entry.notes || ''}\n`;
+            });
+            csv += '\nSummary\n';
+            csv += `Total Income,₹${totalIncome.toFixed(2)}\n`;
+            csv += `Total Expenses,₹${totalExpenses.toFixed(2)}\n`;
+            csv += `Total Savings,₹${totalSavings.toFixed(2)}\n`;
+            csv += `Net Balance,₹${netBalance.toFixed(2)}\n`;
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            const pageTitle = document.title.replace(/[\/\\:*?"<>|]/g, '_');
+            a.download = `${pageTitle}_Export.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Function to export charts as PNG
+        function exportChartAsPNG(canvasId, fileNamePrefix) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.error(`Canvas with ID ${canvasId} not found.`);
+                return;
+            }
+            const imageURI = canvas.toDataURL('image/png');
+            const a = document.createElement('a');
+            a.href = imageURI;
+            const pageTitle = document.title.replace(/[\/\\:*?"<>|]/g, '_');
+            a.download = `${pageTitle}_${fileNamePrefix}.png`;
+            a.click();
+        }
+
+
+        // --- Event Listeners and Initial Load ---
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadEntries();
+            populateCategoryDropdown();
+            updateTable(); // This will also call populateFilterDropdowns and updateAllCharts
+
+            document.getElementById('type').addEventListener('change', populateCategoryDropdown);
+            document.getElementById('date').addEventListener('change', updatePageTitle);
+            document.getElementById('budgetForm').addEventListener('submit', addEntry);
+
+            // Add event listeners for filter inputs (now including select changes)
+            document.getElementById('filterCategory').addEventListener('change', updateTable);
+            document.getElementById('filterType').addEventListener('change', updateTable);
+            document.getElementById('filterAmount').addEventListener('input', updateTable);
+            document.getElementById('filterDate').addEventListener('input', updateTable);
+            document.getElementById('filterNotes').addEventListener('input', updateTable);
+
+
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('date').value = `${year}-${month}-${day}`;
+        });
+    </script>
+</body>
+</html>

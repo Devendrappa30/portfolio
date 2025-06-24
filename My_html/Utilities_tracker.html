@@ -1,0 +1,311 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilities Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    th { background-color: #4CAF50; color: white; }
+    tr:nth-child(even) { background-color: #f2f2f2; }
+    tr:hover { background-color: #ddd; }
+    .editable { cursor: pointer; }
+    .editable:hover { background-color: #e0e0e0; }
+    .remove-btn { color: red; cursor: pointer; }
+    .total-row { font-weight: bold; background-color: #ffe6cc; }
+    .save-message { color: green; font-size: 14px; display: none; }
+    .bill-input { margin: 10px 0; }
+    .bill-input label { margin-right: 10px; }
+    .bill-input input { padding: 5px; width: 100px; }
+    .bill-input span { margin-left: 10px; font-weight: bold; }
+    .draggable { cursor: move; }
+    .dragging { opacity: 0.5; }
+    .drag-over { background-color: #d3d3d3; }
+    #billTitle { cursor: text; }
+    #billTitle.editable:hover { background-color: #e0e0e0; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="billTitle" class="editable" contenteditable="true" oninput="syncTitleMonth()">Utilities Bill - April 2025</h2>
+    <div class="bill-input">
+      <label>Motor Bill: <input type="number" id="motorBill" min="0" onchange="calculateTotals()"></label>
+      <label>Water Bill: <input type="number" id="waterBill" min="0" onchange="calculateTotals()"></label>
+      <span>Total Motor & Water: ₹<span id="totalMotorWater">0</span></span>
+    </div>
+    <table id="utilitiesTable">
+      <thead>
+        <tr>
+          <th>Type of Bill</th>
+          <th>Home Name</th>
+          <th>No. Members</th>
+          <th>Consumed Month</th>
+          <th>Amount</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr class="draggable">
+          <td class="editable" contenteditable="true">Motor & Water</td>
+          <td class="editable" contenteditable="true">Asha</td>
+          <td class="editable" contenteditable="true">3</td>
+          <td class="editable" contenteditable="true">April</td>
+          <td class="editable" contenteditable="true"></td>
+          <td><span class="remove-btn" onclick="removeRow(this)">Remove</span></td>
+        </tr>
+        <tr class="draggable">
+          <td class="editable" contenteditable="true">Motor & Water</td>
+          <td class="editable" contenteditable="true">Savitha</td>
+          <td class="editable" contenteditable="true">3</td>
+          <td class="editable" contenteditable="true">April</td>
+          <td class="editable" contenteditable="true"></td>
+          <td><span class="remove-btn" onclick="removeRow(this)">Remove</span></td>
+        </tr>
+        <tr class="draggable">
+          <td class="editable" contenteditable="true">Motor & Water</td>
+          <td class="editable" contenteditable="true">Pramod</td>
+          <td class="editable" contenteditable="true">2</td>
+          <td class="editable" contenteditable="true">April</td>
+          <td class="editable" contenteditable="true"></td>
+          <td><span class="remove-btn" onclick="removeRow(this)">Remove</span></td>
+        </tr>
+        <tr class="draggable">
+          <td class="editable" contenteditable="true">Motor & Water</td>
+          <td class="editable" contenteditable="true">Dev</td>
+          <td class="editable" contenteditable="true">2</td>
+          <td class="editable" contenteditable="true">April</td>
+          <td class="editable" contenteditable="true"></td>
+          <td><span class="remove-btn" onclick="removeRow(this)">Remove</span></td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="4">Total</td>
+          <td id="totalAmount" class="editable" contenteditable="true">0</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <div id="saveMessage" class="save-message">Changes saved!</div>
+    <button onclick="addRow()">Add New Entry</button>
+  </div>
+
+  <script>
+    // Load saved data
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedData = localStorage.getItem('utilitiesData');
+      if (savedData) {
+        const data = JSON.parse(savedData);
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = data.rows;
+        document.getElementById('totalAmount').textContent = data.total;
+        document.getElementById('motorBill').value = data.motorBill || '';
+        document.getElementById('waterBill').value = data.waterBill || '';
+        document.getElementById('totalMotorWater').textContent = data.totalMotorWater || '0';
+        const savedTitle = data.title || 'Utilities Bill - April 2025';
+        document.getElementById('billTitle').textContent = savedTitle;
+        syncTitleMonth(); // Sync initial month from title
+      }
+
+      // Add event listeners for all editable cells and drag functionality
+      initializeEventListeners();
+
+      const tableBody = document.getElementById('tableBody');
+      tableBody.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(tableBody, e.clientY);
+        const draggable = document.querySelector('.dragging');
+        if (afterElement == null) {
+          tableBody.appendChild(draggable);
+        } else {
+          tableBody.insertBefore(draggable, afterElement);
+        }
+      });
+
+      tableBody.addEventListener('dragend', () => {
+        calculateTotals();
+        saveData();
+      });
+
+      document.querySelectorAll('.draggable').forEach(row => {
+        row.draggable = true;
+        row.addEventListener('dragstart', () => row.classList.add('dragging'));
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          calculateTotals();
+          saveData();
+        });
+      });
+
+      calculateTotals();
+    });
+
+    function initializeEventListeners() {
+      document.querySelectorAll('.editable').forEach(cell => {
+        cell.addEventListener('input', () => {
+          calculateTotals();
+          saveData();
+        });
+      });
+      document.getElementById('motorBill').addEventListener('input', calculateTotals);
+      document.getElementById('waterBill').addEventListener('input', calculateTotals);
+      document.getElementById('billTitle').addEventListener('input', syncTitleMonth);
+    }
+
+    function getDragAfterElement(container, y) {
+      const draggableElements = [...container.querySelectorAll('.draggable:not(.dragging)')];
+
+      return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = y - box.top - box.height / 2;
+        if (offset < 0 && offset > closest.offset) {
+          return { offset: offset, element: child };
+        } else {
+          return closest;
+        }
+      }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function syncTitleMonth() {
+      const title = document.getElementById('billTitle').textContent.trim();
+      const monthMatch = title.match(/Utilities Bill - (\w+)/i);
+      if (monthMatch && monthMatch[1]) {
+        const newMonth = monthMatch[1];
+        document.querySelectorAll('td[contenteditable="true"]:nth-child(4)').forEach(cell => {
+          cell.textContent = newMonth;
+        });
+        calculateTotals();
+        saveData();
+      }
+    }
+
+    function calculateTotals() {
+      const motorBill = parseFloat(document.getElementById('motorBill').value) || 0;
+      const waterBill = parseFloat(document.getElementById('waterBill').value) || 0;
+      const totalMotorWater = motorBill + waterBill;
+      document.getElementById('totalMotorWater').textContent = totalMotorWater.toFixed(1);
+
+      const rows = document.querySelectorAll('#tableBody tr:not(.total-row)');
+      const memberCounts = {};
+      rows.forEach(row => {
+        const home = row.cells[1].textContent.trim();
+        const members = parseInt(row.cells[2].textContent) || 0;
+        if (members > 0) memberCounts[home] = (memberCounts[home] || 0) + members;
+      });
+
+      let totalMembers = Object.values(memberCounts).reduce((sum, count) => sum + count, 0);
+      let perMemberAmount = totalMembers > 0 ? totalMotorWater / totalMembers : 0;
+      let grandTotal = 0;
+
+      rows.forEach(row => {
+        const home = row.cells[1].textContent.trim();
+        const members = parseInt(row.cells[2].textContent) || 0;
+        if (members > 0 && memberCounts[home]) {
+          const amount = perMemberAmount * members;
+          row.cells[4].textContent = amount.toFixed(1);
+          grandTotal += amount;
+        }
+      });
+      document.getElementById('totalAmount').textContent = grandTotal.toFixed(1);
+    }
+
+    function saveData() {
+      const rows = document.getElementById('tableBody').innerHTML;
+      const total = document.getElementById('totalAmount').textContent;
+      const motorBill = document.getElementById('motorBill').value;
+      const waterBill = document.getElementById('waterBill').value;
+      const totalMotorWater = document.getElementById('totalMotorWater').textContent;
+      const title = document.getElementById('billTitle').textContent;
+      localStorage.setItem('utilitiesData', JSON.stringify({ rows, total, motorBill, waterBill, totalMotorWater, title }));
+      const saveMessage = document.getElementById('saveMessage');
+      saveMessage.style.display = 'block';
+      setTimeout(() => saveMessage.style.display = 'none', 2000);
+    }
+
+    function removeRow(btn) {
+      btn.parentElement.parentElement.remove();
+      calculateTotals();
+      saveData();
+    }
+
+    function addRow() {
+      const tbody = document.getElementById('tableBody');
+      const newRow = `
+        <tr class="draggable">
+          <td class="editable" contenteditable="true">Motor & Water</td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true"></td>
+          <td class="editable" contenteditable="true">${document.querySelector('td[contenteditable="true"]:nth-child(4)').textContent || 'April'}</td>
+          <td class="editable" contenteditable="true"></td>
+          <td><span class="remove-btn" onclick="removeRow(this)">Remove</span></td>
+        </tr>
+      `;
+      const rows = tbody.getElementsByTagName('tr');
+      if (rows.length > 1) {
+        const insertBeforeRow = rows[rows.length - 2]; // Insert before the total row
+        tbody.insertBefore(htmlToElement(newRow), insertBeforeRow);
+      } else {
+        tbody.insertAdjacentHTML('beforeend', newRow);
+      }
+      initializeEventListeners(); // Reinitialize event listeners for new row
+      document.querySelectorAll('.draggable').forEach(row => {
+        row.draggable = true;
+        row.addEventListener('dragstart', () => row.classList.add('dragging'));
+        row.addEventListener('dragend', () => {
+          row.classList.remove('dragging');
+          calculateTotals();
+          saveData();
+        });
+      });
+      calculateTotals();
+      saveData();
+    }
+
+    function htmlToElement(html) {
+      const template = document.createElement('template');
+      template.innerHTML = html.trim();
+      return template.content.firstChild;
+    }
+  </script>
+</body>
+</html>

@@ -45,6 +45,37 @@
             -webkit-transform: rotate(45deg);
             vertical-align: middle;
         }
+        .top-nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-start;
+            margin-bottom: 16px;
+            margin-top: 18px;
+        }
+        .icon-btn {
+            background: #2563EB;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 1.3em;
+            box-shadow: 0 2px 6px rgba(30,58,138,0.08);
+        }
+        .icon-btn:hover {
+            background: #F59E0B;
+            color: #fff;
+        }
+        @media (max-width: 768px) {
+            .top-nav-buttons {
+                justify-content: center;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-100 font-sans smooth-scroll">
@@ -80,6 +111,21 @@
             </div>
         </div>
     </nav>
+
+    <div class="top-nav-buttons">
+        <!-- Return Home Button (icon only) -->
+        <a href="../../index.html" class="icon-btn" title="Return Home" aria-label="Return Home">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M9 21h6a2 2 0 002-2v-7h-2v7H9v-7H7v7a2 2 0 002 2z"/>
+            </svg>
+        </a>
+        <!-- Return Button (icon only) -->
+        <button class="icon-btn" onclick="history.back()" title="Return (Back)" aria-label="Return">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="24" height="24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+        </button>
+    </div>
 
     <section id="service-offerings" class="py-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

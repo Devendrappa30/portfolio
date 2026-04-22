@@ -38,11 +38,40 @@
         .nav-cta { background:var(--accent); color:var(--navy); font-size:0.82rem; font-weight:700; padding:0.45rem 1.1rem; border-radius:4px; transition:background 0.15s; white-space:nowrap; text-decoration:none; display:inline-block; }
         .nav-cta:hover { background:var(--accent-h); }
 
-        .dropdown-content { display:none; position:absolute; background:#fff; min-width:185px; box-shadow:0 8px 24px rgba(10,31,68,0.13); z-index:60; top:calc(100% + 6px); right:0; border-radius:6px; border-top:3px solid var(--accent); overflow:hidden; }
-        .dropdown-content a { color:var(--navy); padding:0.55rem 1rem; font-size:0.82rem; font-weight:500; text-decoration:none; display:block; }
-        .dropdown-content a:hover { background:#eff4ff; }
-        .dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content { display:block; }
-        .dropdown-btn-chevron::after { content:''; border:solid currentColor; border-width:0 2px 2px 0; display:inline-block; padding:2.5px; margin-left:5px; transform:rotate(45deg); vertical-align:middle; margin-bottom:2px; }
+        .res-dd-menu{display:none;position:absolute;background:#fff;min-width:195px;box-shadow:0 10px 30px rgba(10,31,68,0.15);z-index:200;top:calc(100% + 8px);right:0;border-radius:8px;border-top:3px solid var(--accent);overflow:hidden;}
+        .res-dd-menu.open{display:block;}
+        .res-dd-menu a{color:var(--navy);padding:0.65rem 1.1rem;font-size:0.82rem;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:0.5rem;border-bottom:1px solid #f0f4ff;transition:background 0.12s;}
+        .res-dd-menu a:last-child{border-bottom:none;}
+        .res-dd-menu a:hover{background:#eff4ff;}
+        .res-chev{transition:transform 0.2s;display:inline-block;}
+        .res-chev.up{transform:rotate(180deg);}
+        .nav-cta-btn{background:var(--accent);color:var(--navy);font-size:0.82rem;font-weight:700;padding:0.45rem 1.1rem;border-radius:4px;transition:background 0.15s;white-space:nowrap;display:inline-block;cursor:pointer;border:none;font-family:'Open Sans',sans-serif;}
+        .nav-cta-btn:hover{background:var(--accent-h);}
+        /* Modal */
+        .modal-ov{display:none;position:fixed;inset:0;background:rgba(10,31,68,0.65);z-index:1000;align-items:center;justify-content:center;padding:1rem;}
+        .modal-ov.open{display:flex;}
+        .modal-bx{background:#fff;border-radius:14px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(10,31,68,0.25);overflow:hidden;max-height:90vh;overflow-y:auto;animation:mIn 0.25s ease;}
+        @keyframes mIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+        .modal-hd{background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:1.4rem 1.75rem;display:flex;justify-content:space-between;align-items:flex-start;position:sticky;top:0;z-index:10;}
+        .modal-hd h2{font-family:'Montserrat',sans-serif;font-weight:800;color:#fff;font-size:1.2rem;margin:0;}
+        .modal-hd p{color:var(--text-muted);font-size:0.78rem;margin:0.2rem 0 0;}
+        .modal-x{background:rgba(255,255,255,0.1);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;}
+        .modal-x:hover{background:rgba(255,255,255,0.25);}
+        .modal-bd{padding:1.5rem 1.75rem 1.75rem;}
+        .fg{margin-bottom:1rem;}
+        .fl{display:block;font-size:0.75rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.35rem;}
+        .fl span{color:#e53e3e;}
+        .fi,.fs,.ft{width:100%;padding:0.6rem 0.85rem;border:1.5px solid #d1ddf5;border-radius:6px;font-family:'Open Sans',sans-serif;font-size:0.86rem;color:var(--navy);background:#fff;transition:border-color 0.15s,box-shadow 0.15s;outline:none;}
+        .fi:focus,.fs:focus,.ft:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(245,166,35,0.14);}
+        .ft{resize:vertical;min-height:80px;}
+        .frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+        @media(max-width:480px){.frow{grid-template-columns:1fr;}}
+        .fsub{width:100%;background:var(--accent);color:var(--navy);font-family:'Montserrat',sans-serif;font-weight:700;padding:0.78rem;border-radius:6px;border:none;font-size:0.9rem;cursor:pointer;transition:background 0.15s,transform 0.15s;margin-top:0.4rem;}
+        .fsub:hover{background:var(--accent-h);transform:translateY(-1px);}
+        .fnote{font-size:0.73rem;color:#6b7280;text-align:center;margin-top:0.65rem;}
+        .toast-msg{display:none;position:fixed;bottom:1.5rem;right:1.5rem;background:var(--navy);color:#fff;padding:0.85rem 1.35rem;border-radius:8px;border-left:4px solid var(--accent);font-size:0.85rem;font-weight:600;z-index:2000;box-shadow:0 4px 20px rgba(10,31,68,0.2);}
+        .toast-msg.show{display:flex;align-items:center;gap:0.5rem;animation:tIn 0.3s ease;}
+        @keyframes tIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
         #mobile-menu { background:var(--navy); }
         #mobile-menu a { color:#fff; font-size:0.9rem; font-weight:500; text-decoration:none; }
@@ -153,16 +182,28 @@
                 <a href="#case-studies" class="nav-link">Case Studies</a>
                 <a href="#certifications" class="nav-link">Certificates</a>
                 <a href="#best-practices" class="nav-link">Best Practices</a>
-                <div class="dropdown relative">
-                    <button class="nav-link dropdown-btn-chevron focus:outline-none flex items-center">Resources</button>
-                    <div class="dropdown-content">
-                        <a href="templates/Reports & Metrics.html">Reports &amp; Metrics</a>
-                        <a href="templates/Dashboards.html">Dashboards</a>
-                        <a href="templates/other_documents.html">Other Documents</a>
+                <div class="relative" id="resWrap">
+                    <button class="nav-link flex items-center gap-1 focus:outline-none" id="resBtn" onclick="toggleRes(event)">
+                        Resources
+                        <svg id="resChev" class="res-chev w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                    </button>
+                    <div class="res-dd-menu" id="resMenu">
+                        <a href="/static/assets/html_pages/Reports & Metrics.html">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            Reports &amp; Metrics
+                        </a>
+                        <a href="/static/assets/html_pages/Dashboards.html">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            Dashboards
+                        </a>
+                        <a href="/static/assets/html_pages/other_documents.html">
+                            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                            Other Documents
+                        </a>
                     </div>
                 </div>
-                <a href="templates/Service.html" class="nav-link">Services</a>
-                <a href="#contact" class="nav-cta ml-2">Get In Touch</a>
+                <a href="/static/assets/html_pages/Service.html" class="nav-link">Services</a>
+                <button class="nav-cta-btn ml-2" onclick="openModal('gitModal')">Get In Touch</button>
             </div>
             <div class="md:hidden flex items-center">
                 <button id="mobile-menu-button" class="p-2 rounded-md hover:bg-gray-100 focus:outline-none" style="color:var(--navy);">
@@ -188,7 +229,7 @@
                 <a href="assets/html_pages/other_documents.html" class="block text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm">Other Documents</a>
             </div>
         </div>
-        <a href="templates/Service.html" class="block hover:bg-blue-800 px-3 py-2 rounded-md">Services</a>
+        <a href="assets/html_pages/Service.html" class="block hover:bg-blue-800 px-3 py-2 rounded-md">Services</a>
         <a href="#contact" class="block hover:bg-blue-800 px-3 py-2 rounded-md">Contact</a>
     </div>
 </nav>
@@ -202,7 +243,7 @@
             <p class="text-lg md:text-xl mb-3" style="color:var(--text-muted);">"Helping teams deliver high-quality software through Agile &amp; Scrum practices"</p>
             <p class="text-sm uppercase tracking-widest mb-8" style="color:var(--accent); font-weight:600;">IT Services &amp; Agile Consulting</p>
             <div class="flex flex-wrap gap-4 mb-14">
-                <a href="#contact" class="hero-cta-primary">Get In Touch</a>
+                <button class="hero-cta-primary" onclick="openModal('gitModal')">Get In Touch</button>
                 <a href="#case-studies" class="hero-cta-secondary">View Case Studies</a>
             </div>
         </div>
@@ -247,7 +288,7 @@
             <div class="flex justify-center">
                 <div class="relative">
                     <div class="w-72 h-72 md:w-80 md:h-80 rounded-2xl overflow-hidden shadow-2xl" style="border:4px solid var(--accent);">
-                        <img src="static/images/Myimage.png" alt="Devendrappa – Agile Practitioner" class="w-full h-full object-cover">
+                        <img src="images/Myimage.png" alt="Devendrappa – Agile Practitioner" class="w-full h-full object-cover">
                     </div>
                     <div class="absolute -bottom-5 -right-5 bg-white rounded-xl shadow-lg px-4 py-3 flex items-center gap-3" style="border:1px solid #e2e8f4;">
                         <div class="w-10 h-10 rounded-lg flex items-center justify-center" style="background:var(--navy);">
@@ -330,97 +371,169 @@
     </div>
 </section>
 
-   <section id="case-studies" class="py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Case Studies</h2>
-            <div class="space-y-6">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('narayana')">Narayana Health - Zendesk Sell & Support Implementation</h3>
-                    <div id="narayana" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Healthcare Project" class="rounded-lg mb-4">
-                        <p class="text-gray-700 mb-2"><strong>Client:</strong> Narayana Health (Healthcare, 250 agents)</p>
-                        <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual lead handling, inefficient support, data migration gaps, lack of self-service.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Sell/Support, automated ticket routing, self-service portal, integrated HMS/EMR/Telephony, 25+ custom workflows.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> 30% increase in lead conversions, 40% faster response times, 25% improved resolution speed, 35% better SLA compliance, 40% increased CSAT.</p>
-                        <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell/Support, HMS, EMR, Telephony, Agile methodology.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('glassco')">Glassco - Zendesk Sell CRM Implementation</h3>
-                    <div id="glassco" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Equipment Project" class="rounded-lg mb-4">
-                        <p class="text-gray-700 mb-2"><strong>Client:</strong> Glassco Laboratory Equipment (1000+ employees, 25 sales agents)</p>
-                        <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Manual sales tracking, limited lead management, expense calculation issues, lack of integrations.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Sell, integrated Google Maps/SAP/LinkedIn, multi-channel communication (WhatsApp, Facebook), automated expense tracking.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved sales tracking, higher lead conversions, automated expense management, seamless integrations.</p>
-                        <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Sell, Google Maps API, SAP, LinkedIn, WhatsApp, Agile methodology.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('everise')">Everise - Zendesk Suite + ITSM Implementation</h3>
-                    <div id="everise" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Customer Experience Project" class="rounded-lg mb-4">
-                        <p class="text-gray-700 mb-2"><strong>Client:</strong> Everise (Customer Experience, 460,000+ employees)</p>
-                        <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Difficult ticket logging, inefficient ITSM, limited reporting, lack of integration.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Zendesk Suite, integrated MyndBend/OpsGenie, multi-channel support, HRMS/AD integration, automated SLA tracking.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 20% cost reduction, 19% resolution efficiency increase.</p>
-                        <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Device42, Agile methodology.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('qualitykiosk')">QualityKiosk - Zendesk Suite + ITSM Implementation</h3>
-                    <div id="qualitykiosk" class="case-study-content">
-                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="IT Services Project" class="rounded-lg mb-4">
-                        <p class="text-gray-700 mb-2"><strong>Client:</strong> QualityKiosk (IT Services)</p>
-                        <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Inefficient ITSM workflows, lack of unified system, limited self-service, no integration.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Configured Zendesk Suite, automated ITSM workflows, integrated HRMS/AD, multi-channel support, custom dashboards.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> CSAT from 55% to 92%, first response time from 37 to 7 hours, 19% resolution efficiency increase, 20% cost reduction.</p>
-                        <p class="text-gray-700"><strong>Technologies:</strong> Zendesk Suite, MyndBend, OpsGenie, Jira, Salesforce, SAP, Agile methodology.</p>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <h3 class="text-xl font-semibold text-blue-900 mb-2 cursor-pointer" onclick="toggleCaseStudy('artofliving')">The Art of Living - Salesforce Sales & Marketing Cloud</h3>
-                    <div id="artofliving" class="case-study-content">
-                        <img src="/static/images/image5.png" alt="Non-Profit Project" class="rounded-lg mb-4">
-                        <p class="text-gray-700 mb-2"><strong>Client:</strong> The Art of Living (Non-Profit, Wellness)</p>
-                        <p class="text-gray-700 mb-2"><strong>Challenges:</strong> Disconnected sales/marketing, inefficient lead management, limited reporting, manual data handling.</p>
-                        <p class="text-gray-700 mb-2"><strong>Solutions:</strong> Implemented Salesforce Sales & Marketing Cloud, automated workflows, data migration, custom dashboards, mobile access.</p>
-                        <p class="text-gray-700 mb-2"><strong>Results:</strong> Improved lead conversions, automated processes, enhanced data visibility, personalized engagement.</p>
-                        <p class="text-gray-700"><strong>Technologies:</strong> Salesforce Sales/Marketing Cloud, Agile methodology.</p>
-                    </div>
-                </div>
-            </div>
+<!-- CASE STUDIES -->
+<section id="case-studies" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="section-label justify-center">Proven Results</div>
+            <h2 class="section-title text-3xl md:text-4xl mb-2">Case Studies</h2>
+            <div class="section-divider mx-auto"></div>
+            <p class="text-gray-500 max-w-2xl mx-auto text-sm">Real-world client engagements delivering measurable impact through Agile transformation, CRM implementation, and IT service management.</p>
         </div>
-    </section>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-    <section id="certifications" class="bg-gray-200 py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 class="text-3xl font-bold text-gray-900 mb-6">Certifications</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="/static/images/image4.png" alt="CSM Badge" class="w-16 h-16 mr-4">
-                    <div>
-                        <h3 class="text-lg font-semibold text-blue-900">Certified ScrumMaster (CSM)</h3>
-                        <p class="text-gray-700">Scrum Alliance</p>
-                    </div>
+            <div class="case-card">
+                <div class="case-card-header">
+                    <span class="text-xs font-semibold uppercase tracking-widest" style="color:var(--accent);">Healthcare</span>
+                    <h3 class="text-white font-bold mt-1" style="font-family:'Montserrat',sans-serif;">Narayana Health &ndash; Zendesk Sell &amp; Support</h3>
                 </div>
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="/static/images/image3.png" alt="Google PM Badge" class="w-16 h-16 mr-4">
-                    <div>
-                        <h3 class="text-lg font-semibold text-blue-900">Google Project Management</h3>
-                        <p class="text-gray-700">Google Career Certificates</p>
+                <div class="case-card-body">
+                    <p class="text-gray-600 text-sm mb-3">Implemented Zendesk for 250 agents with HMS/EMR/Telephony integration and 25+ custom workflows, transforming lead handling and support operations.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="outcome-badge">+30% Lead Conversions</span>
+                        <span class="outcome-badge">40% Faster Response</span>
                     </div>
-                </div>
-                <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                    <img src="/static/images/image2.png" alt="Gen AI Badge" class="w-16 h-16 mr-4">
-                    <div>
-                        <h3 class="text-lg font-semibold text-blue-900">Generative AI Overview for Project Managers</h3>
-                        <p class="text-gray-700">Accredited Provider</p>
+                    <button class="toggle-btn" onclick="toggleCaseStudy('narayana')">View Details &#9662;</button>
+                    <div id="narayana" class="case-study-content mt-4 pt-4" style="border-top:1px solid #e2e8f4;">
+                        <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Healthcare Project" class="rounded-lg mb-3 w-full object-cover" style="max-height:140px;">
+                        <ul class="text-sm text-gray-600 space-y-1.5">
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Client:</strong> Narayana Health (Healthcare, 250 agents)</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Challenge:</strong> Manual lead handling, inefficient support, data migration gaps, no self-service</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Results:</strong> 30% lead conversions &#8593;, 40% faster response, 25% resolution speed &#8593;, 35% SLA compliance &#8593;, 40% CSAT &#8593;</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Tech:</strong> Zendesk Sell/Support, HMS, EMR, Telephony, Agile</span></li>
+                        </ul>
                     </div>
                 </div>
             </div>
+
+            <div class="case-card">
+                <div class="case-card-header">
+                    <span class="text-xs font-semibold uppercase tracking-widest" style="color:var(--accent);">Manufacturing / Sales</span>
+                    <h3 class="text-white font-bold mt-1" style="font-family:'Montserrat',sans-serif;">Glassco &ndash; Zendesk Sell CRM</h3>
+                </div>
+                <div class="case-card-body">
+                    <p class="text-gray-600 text-sm mb-3">Configured Zendesk Sell for 25 sales agents at a 1000+ employee lab equipment company with SAP, Google Maps, and WhatsApp integrations.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="outcome-badge">Automated Expense Mgmt</span>
+                        <span class="outcome-badge">Zendesk | SAP</span>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleCaseStudy('glassco')">View Details &#9662;</button>
+                    <div id="glassco" class="case-study-content mt-4 pt-4" style="border-top:1px solid #e2e8f4;">
+                        <img src="https://images.unsplash.com/photo-1587854692152-cbe660dbde88?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Lab Equipment" class="rounded-lg mb-3 w-full object-cover" style="max-height:140px;">
+                        <ul class="text-sm text-gray-600 space-y-1.5">
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Client:</strong> Glassco Laboratory Equipment (1000+ employees, 25 sales agents)</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Challenge:</strong> Manual sales tracking, limited lead management, expense calculation issues</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Results:</strong> Improved sales tracking, higher lead conversions, automated expense management</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Tech:</strong> Zendesk Sell, Google Maps API, SAP, LinkedIn, WhatsApp, Agile</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-card-header">
+                    <span class="text-xs font-semibold uppercase tracking-widest" style="color:var(--accent);">Customer Experience</span>
+                    <h3 class="text-white font-bold mt-1" style="font-family:'Montserrat',sans-serif;">Everise &ndash; Zendesk Suite + ITSM</h3>
+                </div>
+                <div class="case-card-body">
+                    <p class="text-gray-600 text-sm mb-3">Full Zendesk Suite rollout for a 460,000+ employee CX company, integrating MyndBend and OpsGenie with automated SLA tracking.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="outcome-badge">CSAT 55%&#8594;92%</span>
+                        <span class="outcome-badge">37&#8594;7 hr Response</span>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleCaseStudy('everise')">View Details &#9662;</button>
+                    <div id="everise" class="case-study-content mt-4 pt-4" style="border-top:1px solid #e2e8f4;">
+                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="CX Project" class="rounded-lg mb-3 w-full object-cover" style="max-height:140px;">
+                        <ul class="text-sm text-gray-600 space-y-1.5">
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Client:</strong> Everise (Customer Experience, 460,000+ employees)</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Challenge:</strong> Difficult ticket logging, inefficient ITSM, limited reporting, lack of integration</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Results:</strong> CSAT 55%&#8594;92%, first response 37&#8594;7 hours, 20% cost reduction, 19% efficiency &#8593;</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Tech:</strong> Zendesk Suite, MyndBend, OpsGenie, Device42, Agile</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-card-header">
+                    <span class="text-xs font-semibold uppercase tracking-widest" style="color:var(--accent);">IT Services</span>
+                    <h3 class="text-white font-bold mt-1" style="font-family:'Montserrat',sans-serif;">QualityKiosk &ndash; Zendesk Suite + ITSM</h3>
+                </div>
+                <div class="case-card-body">
+                    <p class="text-gray-600 text-sm mb-3">Configured Zendesk Suite with automated ITSM workflows, HRMS/AD integration, and custom dashboards for an IT services organisation.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="outcome-badge">19% Efficiency &#8593;</span>
+                        <span class="outcome-badge">20% Cost &#8595;</span>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleCaseStudy('qualitykiosk')">View Details &#9662;</button>
+                    <div id="qualitykiosk" class="case-study-content mt-4 pt-4" style="border-top:1px solid #e2e8f4;">
+                        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="IT Services" class="rounded-lg mb-3 w-full object-cover" style="max-height:140px;">
+                        <ul class="text-sm text-gray-600 space-y-1.5">
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Client:</strong> QualityKiosk (IT Services)</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Challenge:</strong> Inefficient ITSM workflows, no unified system, limited self-service, no integration</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Results:</strong> CSAT 55%&#8594;92%, first response 37&#8594;7 hrs, 19% resolution &#8593;, 20% cost &#8595;</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Tech:</strong> Zendesk Suite, MyndBend, OpsGenie, Jira, Salesforce, SAP, Agile</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="case-card">
+                <div class="case-card-header">
+                    <span class="text-xs font-semibold uppercase tracking-widest" style="color:var(--accent);">Non-Profit / Wellness</span>
+                    <h3 class="text-white font-bold mt-1" style="font-family:'Montserrat',sans-serif;">The Art of Living &ndash; Salesforce Sales &amp; Marketing Cloud</h3>
+                </div>
+                <div class="case-card-body">
+                    <p class="text-gray-600 text-sm mb-3">Implemented Salesforce Sales &amp; Marketing Cloud with automated workflows, data migration, and custom dashboards for a global wellness non-profit.</p>
+                    <div class="flex flex-wrap gap-2 mb-4">
+                        <span class="outcome-badge">Improved Lead Conversions</span>
+                        <span class="outcome-badge">Salesforce | Agile</span>
+                    </div>
+                    <button class="toggle-btn" onclick="toggleCaseStudy('artofliving')">View Details &#9662;</button>
+                    <div id="artofliving" class="case-study-content mt-4 pt-4" style="border-top:1px solid #e2e8f4;">
+                        <ul class="text-sm text-gray-600 space-y-1.5">
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Client:</strong> The Art of Living (Non-Profit, Wellness)</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Challenge:</strong> Disconnected sales/marketing, inefficient lead management, limited reporting, manual data</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Results:</strong> Improved lead conversions, automated processes, enhanced data visibility, personalized engagement</span></li>
+                            <li class="flex gap-2"><span style="color:var(--accent);">&#9658;</span><span><strong>Tech:</strong> Salesforce Sales/Marketing Cloud, Agile methodology</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
         </div>
-    </section>
+    </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications" class="py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <div class="section-label justify-center">Credentials</div>
+            <h2 class="section-title text-3xl md:text-4xl mb-2">Certifications</h2>
+            <div class="section-divider mx-auto"></div>
+            <p class="text-gray-500 max-w-xl mx-auto text-sm">Industry-recognised credentials validating expertise across Agile, Scrum, and IT service management.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="cert-card">
+                <div class="cert-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg></div>
+                <div><p class="font-bold" style="color:var(--navy); font-family:'Montserrat',sans-serif;">Certified Scrum Master (CSM)</p><p class="text-sm text-gray-500 mt-0.5">Scrum Alliance &mdash; Active Certification</p><span class="cert-badge">&#10003; Active</span></div>
+            </div>
+            <div class="cert-card">
+                <div class="cert-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg></div>
+                <div><p class="font-bold" style="color:var(--navy); font-family:'Montserrat',sans-serif;">SAFe 5.0 Agilist (SA)</p><p class="text-sm text-gray-500 mt-0.5">Scaled Agile Inc. &mdash; Scaled Agile Framework</p><span class="cert-badge">&#10003; Active</span></div>
+            </div>
+            <div class="cert-card">
+                <div class="cert-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></div>
+                <div><p class="font-bold" style="color:var(--navy); font-family:'Montserrat',sans-serif;">ITIL Foundation v4</p><p class="text-sm text-gray-500 mt-0.5">Axelos &mdash; IT Service Management</p><span class="cert-badge">&#10003; Active</span></div>
+            </div>
+            <div class="cert-card">
+                <div class="cert-icon"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg></div>
+                <div><p class="font-bold" style="color:var(--navy); font-family:'Montserrat',sans-serif;">Professional Scrum Product Owner (PSPO)</p><p class="text-sm text-gray-500 mt-0.5">Scrum.org &mdash; Product Ownership</p><span class="cert-badge">&#10003; Active</span></div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <!-- BEST PRACTICES -->
 <section id="best-practices" class="py-20">
@@ -514,9 +627,9 @@
                     <li class="flex items-start gap-2"><span class="mt-0.5">&#128222;</span><a href="tel:+919876543210" class="hover:text-white transition-colors">+91 98765 43210</a></li>
                     <li class="flex items-start gap-2"><span class="mt-0.5">&#128279;</span><a href="https://www.linkedin.com/in/devendrappa-agile" target="_blank" class="hover:text-white transition-colors">linkedin.com/in/devendrappa-agile</a></li>
                 </ul>
-                <a href="#contact" class="mt-6 inline-block text-sm font-semibold px-5 py-2 rounded-md transition-colors" style="background:var(--accent); color:var(--navy);" onmouseover="this.style.background='#e09510';" onmouseout="this.style.background='#f5a623';">
+                <button onclick="openModal('conModal')" class="mt-6 inline-block text-sm font-semibold px-5 py-2 rounded-md transition-colors" style="background:var(--accent); color:var(--navy);" onmouseover="this.style.background='#e09510';" onmouseout="this.style.background='#f5a623';">
                     Request a Consultation
-                </a>
+                </button>
             </div>
         </div>
         <div class="pt-6 flex flex-col md:flex-row items-center justify-between gap-3 text-sm" style="color:#93b4d8;">
@@ -530,18 +643,156 @@
     </div>
 </footer>
 
+<!-- MODAL: GET IN TOUCH -->
+<div class="modal-ov" id="gitModal" onclick="if(event.target===this)closeModal('gitModal')">
+  <div class="modal-bx">
+    <div class="modal-hd">
+      <div><h2>Get In Touch</h2><p>I'll get back to you within 24 hours</p></div>
+      <button class="modal-x" onclick="closeModal('gitModal')">&#10005;</button>
+    </div>
+    <div class="modal-bd">
+      <div class="frow">
+        <div class="fg"><label class="fl">First Name <span>*</span></label><input type="text" class="fi" placeholder="John"></div>
+        <div class="fg"><label class="fl">Last Name <span>*</span></label><input type="text" class="fi" placeholder="Smith"></div>
+      </div>
+      <div class="fg"><label class="fl">Email Address <span>*</span></label><input type="email" class="fi" placeholder="john@company.com"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Phone Number</label><input type="tel" class="fi" placeholder="+91 98765 43210"></div>
+        <div class="fg"><label class="fl">Company</label><input type="text" class="fi" placeholder="Your Company"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Subject <span>*</span></label>
+        <select class="fs">
+          <option value="">Select a topic&hellip;</option>
+          <option>Agile Transformation Consulting</option>
+          <option>Scrum Master / Agile Coaching</option>
+          <option>SAFe / LeSS Implementation</option>
+          <option>Process Improvement &amp; Optimization</option>
+          <option>Team Training &amp; Mentoring</option>
+          <option>IT Service Delivery Management</option>
+          <option>General Enquiry</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Message <span>*</span></label><textarea class="ft" placeholder="Tell me about your project or what you'd like help with&hellip;"></textarea></div>
+      <button class="fsub" onclick="submitForm('gitModal','Message sent! I'll be in touch soon.')">Send Message &rarr;</button>
+      <p class="fnote">&#128274; Your information is private and will never be shared.</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: REQUEST A CONSULTATION -->
+<div class="modal-ov" id="conModal" onclick="if(event.target===this)closeModal('conModal')">
+  <div class="modal-bx">
+    <div class="modal-hd">
+      <div><h2>Request a Consultation</h2><p>Book a free 30-minute discovery call</p></div>
+      <button class="modal-x" onclick="closeModal('conModal')">&#10005;</button>
+    </div>
+    <div class="modal-bd">
+      <div class="frow">
+        <div class="fg"><label class="fl">Your Name <span>*</span></label><input type="text" class="fi" placeholder="Full name"></div>
+        <div class="fg"><label class="fl">Email Address <span>*</span></label><input type="email" class="fi" placeholder="you@company.com"></div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Phone Number</label><input type="tel" class="fi" placeholder="+91 98765 43210"></div>
+        <div class="fg"><label class="fl">Company</label><input type="text" class="fi" placeholder="Your Company"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Consulting Area <span>*</span></label>
+        <select class="fs">
+          <option value="">Select area&hellip;</option>
+          <option>Agile Transformation</option>
+          <option>Scrum Implementation</option>
+          <option>SAFe / LeSS at Scale</option>
+          <option>Kanban &amp; Flow Optimisation</option>
+          <option>CRM / ITSM Implementation</option>
+          <option>Team Performance &amp; Coaching</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Preferred Date</label><input type="date" class="fi"></div>
+        <div class="fg">
+          <label class="fl">Preferred Time</label>
+          <select class="fs">
+            <option value="">Select time slot&hellip;</option>
+            <option>09:00 &ndash; 09:30 IST</option>
+            <option>10:00 &ndash; 10:30 IST</option>
+            <option>11:00 &ndash; 11:30 IST</option>
+            <option>14:00 &ndash; 14:30 IST</option>
+            <option>15:00 &ndash; 15:30 IST</option>
+            <option>16:00 &ndash; 16:30 IST</option>
+            <option>Flexible / Any time</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">Team Size</label>
+        <select class="fs">
+          <option value="">Select team size&hellip;</option>
+          <option>1&ndash;5 people</option>
+          <option>6&ndash;15 people</option>
+          <option>16&ndash;50 people</option>
+          <option>51&ndash;200 people</option>
+          <option>200+ people</option>
+        </select>
+      </div>
+      <div class="fg"><label class="fl">Describe Your Challenge</label><textarea class="ft" placeholder="What problem are you trying to solve? What does success look like?"></textarea></div>
+      <button class="fsub" onclick="submitForm('conModal','Consultation request received! I'll confirm your slot shortly.')">Book Consultation &rarr;</button>
+      <p class="fnote">&#128274; Free 30-min call &bull; No commitment &bull; Your data stays private.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast-msg" id="toastEl">
+  <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:var(--accent);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+  <span id="toastTxt">Done!</span>
+</div>
+
 <script>
     function toggleCaseStudy(id) {
-        const content = document.getElementById(id);
-        content.classList.toggle('active');
+        document.getElementById(id).classList.toggle('active');
     }
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    mobileMenuButton.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-    const mobileResourcesBtn = document.getElementById('mobile-resources-btn');
-    const mobileResourcesMenu = document.getElementById('mobile-resources-menu');
-    if (mobileResourcesBtn) {
-        mobileResourcesBtn.addEventListener('click', () => { mobileResourcesMenu.classList.toggle('hidden'); });
+    // Mobile main menu
+    document.getElementById('mobile-menu-button').addEventListener('click', () => {
+        document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+    // Mobile resources sub-menu
+    var mrbtn = document.getElementById('mobile-resources-btn');
+    if (mrbtn) mrbtn.addEventListener('click', () => document.getElementById('mobile-resources-menu').classList.toggle('hidden'));
+
+    // Desktop Resources dropdown — click-based, stays open
+    function toggleRes(e) {
+        e.stopPropagation();
+        var menu = document.getElementById('resMenu');
+        var chev = document.getElementById('resChev');
+        var open = menu.classList.contains('open');
+        menu.classList.toggle('open', !open);
+        chev.classList.toggle('up', !open);
+    }
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        var wrap = document.getElementById('resWrap');
+        if (wrap && !wrap.contains(e.target)) {
+            document.getElementById('resMenu').classList.remove('open');
+            document.getElementById('resChev').classList.remove('up');
+        }
+    });
+    // Keep open when clicking links inside (they navigate away anyway)
+    document.getElementById('resMenu').addEventListener('click', function(e){ e.stopPropagation(); });
+
+    // Modal helpers
+    function openModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow='hidden'; }
+    function closeModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow=''; }
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') { closeModal('gitModal'); closeModal('conModal'); } });
+
+    // Form submit (demo)
+    function submitForm(modalId, msg) {
+        closeModal(modalId);
+        var t = document.getElementById('toastEl');
+        document.getElementById('toastTxt').textContent = msg;
+        t.classList.add('show');
+        setTimeout(function(){ t.classList.remove('show'); }, 4200);
     }
 </script>
 </body>
